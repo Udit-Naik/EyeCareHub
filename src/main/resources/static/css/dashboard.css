@@ -1,0 +1,151 @@
+/* 
+   Dashboard Styles
+*/
+
+.dashboard-container {
+    padding: 120px 20px 80px;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 40px;
+}
+
+@media (max-width: 900px) {
+    .dashboard-container {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Sidebar */
+.dash-sidebar {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 30px;
+    height: fit-content;
+}
+
+.user-profile-summary {
+    text-align: center;
+    margin-bottom: 30px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.profile-pic {
+    width: 80px;
+    height: 80px;
+    background: var(--accent-color);
+    border-radius: 50%;
+    margin: 0 auto 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #000;
+}
+
+.user-name {
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.user-email {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.dash-nav a {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 12px 15px;
+    border-radius: 8px;
+    color: var(--text-muted);
+    margin-bottom: 5px;
+    transition: 0.2s;
+}
+
+.dash-nav a:hover,
+.dash-nav a.active {
+    background: rgba(255, 255, 255, 0.05);
+    color: #fff;
+}
+
+.dash-nav a.active {
+    border-left: 3px solid var(--accent-color);
+}
+
+/* Content Area */
+.dash-content {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 30px;
+    min-height: 500px;
+}
+
+.section-title {
+    font-size: 1.5rem;
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* Order History */
+.order-card {
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.order-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.order-status {
+    padding: 4px 12px;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    background: rgba(40, 167, 69, 0.2);
+    color: #28a745;
+}
+
+.order-status.processing {
+    background: rgba(255, 193, 7, 0.2);
+    color: #ffc107;
+}
+
+.order-items {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.order-thumb {
+    width: 60px;
+    height: 60px;
+    background: #fff;
+    border-radius: 6px;
+    object-fit: contain;
+    padding: 5px;
+}
+
+/* Form Grid */
+.dash-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.full-width {
+    grid-column: 1 / -1;
+}

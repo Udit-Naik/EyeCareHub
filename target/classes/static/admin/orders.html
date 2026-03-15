@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Orders - EyeCareHub Admin</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+
+<body style="background: #0a0a0a;">
+
+    <aside class="admin-sidebar">
+        <a href="../index.html" class="admin-logo">NEXUS<span style="color: var(--accent-color);">.</span></a>
+        <nav class="admin-nav">
+            <a href="index.html" class="admin-nav-item"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
+            <a href="users.html" class="admin-nav-item"><i class="fa-solid fa-users"></i> Users</a>
+            <a href="products.html" class="admin-nav-item"><i class="fa-solid fa-box"></i> Products</a>
+            <a href="orders.html" class="admin-nav-item active"><i class="fa-solid fa-receipt"></i> Orders</a>
+            <a href="settings.html" class="admin-nav-item"><i class="fa-solid fa-gear"></i> Settings</a>
+        </nav>
+    </aside>
+
+    <main class="admin-main">
+        <header class="admin-header">
+            <h1 class="admin-title">Orders</h1>
+            <div style="color: #888;">Manage and track customer orders</div>
+        </header>
+
+        <div class="data-table-wrapper">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Customer</th>
+                        <th>Date</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="orders-table-body">
+                    <!-- JS Injected -->
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <script src="../js/data.js"></script>
+    <script src="js/admin.js"></script>
+    <script src="../js/cursor.js"></script>
+</body>
+
+</html>

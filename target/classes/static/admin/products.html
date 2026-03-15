@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Products - EyeCareHub Admin</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+
+<body style="background: #0a0a0a;">
+
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+        <a href="../index.html" class="admin-logo">NEXUS<span style="color: var(--accent-color);">.</span></a>
+
+        <nav class="admin-nav">
+            <a href="index.html" class="admin-nav-item"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
+            <a href="users.html" class="admin-nav-item"><i class="fa-solid fa-users"></i> Users</a>
+            <a href="products.html" class="admin-nav-item active"><i class="fa-solid fa-box"></i> Products</a>
+            <a href="orders.html" class="admin-nav-item"><i class="fa-solid fa-receipt"></i> Orders</a>
+            <a href="settings.html" class="admin-nav-item"><i class="fa-solid fa-gear"></i> Settings</a>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="admin-main">
+        <header class="admin-header">
+            <h1 class="admin-title">Products</h1>
+            <button class="btn-clean" onclick="openAddProductModal()"
+                style="padding: 10px 20px; font-size: 0.9rem; background: var(--accent-color); color: #000; border: none;">
+                <i class="fa-solid fa-plus"></i> Add Product
+            </button>
+        </header>
+
+        <div class="data-table-wrapper">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Image</th>
+                        <th>Name</th>
+                        <th>Category</th>
+                        <th>Price</th>
+                        <th>Stock</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="products-table-body">
+                    <!-- JS Injected -->
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <!-- Add/Edit Product Modal -->
+    <div class="modal-backdrop" id="product-modal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeProductModal()"><i class="fa-solid fa-xmark"></i></span>
+            <h2 id="product-modal-title" style="margin-bottom: 20px;">Add New Product</h2>
+
+            <form id="product-form">
+                <input type="hidden" id="product-id">
+
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px;">Product Name</label>
+                    <input type="text" id="product-name" class="form-input"
+                        style="width: 100%; padding: 10px; background: #222; border: 1px solid #333; color: #fff; border-radius: 8px;"
+                        required>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px;">Category</label>
+                    <select id="product-category" class="form-input"
+                        style="width: 100%; padding: 10px; background: #222; border: 1px solid #333; color: #fff; border-radius: 8px;">
+                        <option value="Electronics">Electronics</option>
+                        <option value="Fashion">Fashion</option>
+                        <option value="Audio">Audio</option>
+                        <option value="Accessories">Accessories</option>
+                    </select>
+                </div>
+
+                <div class="form-group"
+                    style="margin-bottom: 15px; display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div>
+                        <label style="display: block; margin-bottom: 5px;">Price (₹)</label>
+                        <input type="number" id="product-price" class="form-input"
+                            style="width: 100%; padding: 10px; background: #222; border: 1px solid #333; color: #fff; border-radius: 8px;"
+                            required>
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 5px;">Stock</label>
+                        <input type="number" id="product-stock" class="form-input"
+                            style="width: 100%; padding: 10px; background: #222; border: 1px solid #333; color: #fff; border-radius: 8px;"
+                            required>
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 25px;">
+                    <label style="display: block; margin-bottom: 5px;">Image URL</label>
+                    <input type="url" id="product-image" class="form-input"
+                        style="width: 100%; padding: 10px; background: #222; border: 1px solid #333; color: #fff; border-radius: 8px;"
+                        placeholder="https://..." required>
+                </div>
+
+                <button type="submit"
+                    style="width: 100%; background: var(--accent-color); padding: 12px; border: none; font-weight: 700; cursor: pointer; border-radius: 8px;">Save
+                    Product</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Need global data so we can edit products that exist in data.js or localStorage -->
+    <script src="../js/data.js"></script>
+    <script src="js/admin.js"></script>
+    <script src="../js/cursor.js"></script>
+</body>
+
+</html>

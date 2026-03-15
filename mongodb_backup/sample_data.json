@@ -1,0 +1,57 @@
+{
+  "database": "EyeCareHub",
+  "collections": {
+    "users": [
+      {
+        "username": "admin",
+        "email": "admin@eyecarehub.com",
+        "password": "$2a$10$encodedPasswordHashHere",
+        "roles": ["ROLE_ADMIN", "ROLE_USER"],
+        "createdAt": "2024-02-18T00:00:00.000Z"
+      },
+      {
+        "username": "testuser",
+        "email": "test@example.com",
+        "password": "$2a$10$encodedPasswordHashHere",
+        "roles": ["ROLE_USER"],
+        "createdAt": "2024-02-18T00:00:00.000Z"
+      }
+    ],
+    "orders": [
+      {
+        "userId": "USER_ID_HERE",
+        "items": [
+          {
+            "productId": "1",
+            "name": "Product Name",
+            "price": 999.99,
+            "quantity": 1,
+            "imageUrl": "https://example.com/image.jpg"
+          }
+        ],
+        "totalPrice": 999.99,
+        "status": "PENDING",
+        "paymentType": "COD",
+        "orderDate": "2024-02-18T00:00:00.000Z"
+      }
+    ],
+    "carts": [
+      {
+        "userId": "USER_ID_HERE",
+        "items": [],
+        "totalPrice": 0.0
+      }
+    ],
+    "products": []
+  },
+  "notes": {
+    "import_instructions": [
+      "1. Run 'create_admin.bat' to create admin user",
+      "2. Register normal users through website",
+      "3. Products are defined in static/js/data.js (frontend)",
+      "4. Use export_data.bat to backup current data",
+      "5. Use import_data.bat to restore data from backup"
+    ],
+    "password_note": "Passwords are BCrypt hashed. Use create_admin.bat to create users with proper password hashing."
+  }
+}

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Account - NEXUS</title>
+
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/utils.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="../css/animations.css">
+    <link rel="stylesheet" href="../css/antigravity.css">
+</head>
+
+<body style="background: #0a0a0a;">
+
+    <!-- Nav -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="../index.html" class="logo">NEXUS<span class="text-accent">.</span></a>
+
+            <ul class="nav-links desktop-only">
+                <li><a href="../index.html" class="nav-link">Home</a></li>
+                <li><a href="categories.html" class="nav-link">Shop</a></li>
+            </ul>
+
+            <div class="nav-icons">
+                <a href="cart.html" class="icon-btn">
+                    <i class="fa-solid fa-bag-shopping"></i>
+                    <span class="badge" id="cart-count">0</span>
+                </a>
+                <a href="#" class="icon-btn" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i></a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="dash-sidebar">
+            <div class="user-profile-summary">
+                <div class="profile-pic" id="profileInitials">U</div>
+                <h3 class="user-name" id="profileName">User</h3>
+                <p class="user-email" id="profileEmail">user@example.com</p>
+            </div>
+
+            <nav class="dash-nav">
+                <a href="#" class="active" onclick="switchTab('orders', this)"><i class="fa-solid fa-box"></i>
+                    Orders</a>
+                <a href="#" onclick="switchTab('wishlist', this)"><i class="fa-regular fa-heart"></i> Wishlist</a>
+                <a href="#" onclick="switchTab('profile', this)"><i class="fa-regular fa-user"></i> Profile</a>
+                <a href="#" onclick="switchTab('address', this)"><i class="fa-solid fa-map-pin"></i> Addresses</a>
+                <a href="#" onclick="logout()" style="color: #ff4444;"><i class="fa-solid fa-right-from-bracket"></i>
+                    Logout</a>
+            </nav>
+        </aside>
+
+        <!-- Content -->
+        <main class="dash-content">
+            <!-- Orders Tab -->
+            <div id="orders" class="dash-tab active">
+                <h2 class="section-title">Order History</h2>
+                <div id="order-list">
+                    <!-- Injected by JS -->
+                </div>
+            </div>
+
+            <!-- Wishlist Tab -->
+            <div id="wishlist" class="dash-tab hidden">
+                <h2 class="section-title">My Wishlist</h2>
+                <div id="wishlist-grid" class="grid"
+                    style="grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));">
+                    <!-- Injected by JS -->
+                </div>
+            </div>
+
+            <!-- Profile Tab -->
+            <div id="profile" class="dash-tab hidden">
+                <h2 class="section-title">Edit Profile</h2>
+                <form class="dash-form">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" class="form-input" id="editName">
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" class="form-input" id="editEmail" disabled style="opacity: 0.5;">
+                    </div>
+                    <div class="form-group">
+                        <label>Phone</label>
+                        <input type="tel" class="form-input" id="editPhone">
+                    </div>
+                    <div class="full-width">
+                        <button type="button" class="btn btn-primary">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Address Tab -->
+            <div id="address" class="dash-tab hidden">
+                <h2 class="section-title">Saved Addresses</h2>
+                <div class="order-card">
+                    <div style="margin-bottom: 10px;">
+                        <strong>Home</strong> <span
+                            style="font-size: 0.8rem; background: #333; padding: 2px 6px; border-radius: 4px; margin-left: 10px;">Default</span>
+                    </div>
+                    <p style="color: #aaa; font-size: 0.9rem;">123 Tech Street, Silicon Valley, CA 94000</p>
+                    <div style="margin-top: 15px;">
+                        <button class="btn btn-outline btn-sm">Edit</button>
+                        <button class="remove-btn" style="margin-left: 15px;">Delete</button>
+                    </div>
+                </div>
+                <button class="btn btn-primary btn-sm" onclick="openAddressModal()"><i class="fa-solid fa-plus"></i> Add
+                    New Address</button>
+            </div>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div style="text-align: center; color: #666; font-size: 0.9rem;">
+                <p>&copy; 2026 NEXUS Inc.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../js/data.js"></script>
+    <script src="../js/main.js"></script>
+    <script src="../js/dashboard.js"></script>
+    <script src="../js/cursor.js"></script>
+</body>
+
+</html>

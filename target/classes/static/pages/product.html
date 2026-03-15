@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Details - NEXUS</title>
+
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/product.css">
+    <link rel="stylesheet" href="../css/utils.css">
+    <link rel="stylesheet" href="../css/animations.css">
+    <link rel="stylesheet" href="../css/antigravity.css">
+</head>
+
+<body style="background: #0a0a0a;">
+
+    <div id="toast" class="toast hidden">Item added to cart</div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="../index.html" class="logo">NEXUS<span class="text-accent">.</span></a>
+
+            <ul class="nav-links desktop-only">
+                <li><a href="../index.html" class="nav-link">Home</a></li>
+                <li><a href="categories.html" class="nav-link active">Shop</a></li>
+                <li><a href="categories.html?category=electronics" class="nav-link">Electronics</a></li>
+                <li><a href="pages/categories.html?category=fashion" class="nav-link">Fashion</a></li>
+            </ul>
+
+            <div class="nav-icons">
+                <button class="icon-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
+                <a href="cart.html" class="icon-btn">
+                    <i class="fa-solid fa-bag-shopping"></i>
+                    <span class="badge" id="cart-count">0</span>
+                </a>
+                <a href="login.html" class="icon-btn"><i class="fa-regular fa-user"></i></a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Product Detail Section -->
+    <section class="container product-detail-container" id="product-container">
+        <!-- Content injected by JS -->
+        <div style="text-align: center; padding: 100px;">
+            <i class="fa-solid fa-spinner fa-spin fa-3x"></i>
+        </div>
+    </section>
+
+    <!-- Related Products -->
+    <section class="section">
+        <div class="container">
+            <h2 style="margin-bottom: 40px;">You May Also Like</h2>
+            <div class="grid" style="grid-template-columns: repeat(4, 1fr);" id="related-products">
+                <!-- Related items -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div style="text-align: center; color: #666; font-size: 0.9rem;">
+                <p>&copy; 2026 NEXUS Inc.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="../js/data.js"></script>
+    <script src="../js/main.js"></script>
+    <script src="../js/product-detail.js"></script>
+    <script src="../js/cursor.js"></script>
+</body>
+
+</html>

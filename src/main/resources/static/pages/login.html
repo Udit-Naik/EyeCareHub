@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - NEXUS</title>
+
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/auth.css">
+    <link rel="stylesheet" href="../css/utils.css">
+    <link rel="stylesheet" href="../css/animations.css">
+    <link rel="stylesheet" href="../css/antigravity.css">
+</head>
+
+<body style="background: #0a0a0a;">
+
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-logo">NEXUS<span class="text-accent">.</span></div>
+            <h2 class="auth-title">Welcome Back</h2>
+
+            <form id="loginForm" novalidate>
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" id="email" class="form-input" placeholder="name@example.com">
+                    <div class="error-msg">Please enter a valid email</div>
+                </div>
+
+                <div class="form-group">
+                    <label>Password</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="password" class="form-input" placeholder="Enter your password">
+                        <i class="fa-regular fa-eye password-toggle" onclick="togglePassword('password')"></i>
+                    </div>
+                    <div class="error-msg">Password is required</div>
+                </div>
+
+                <div class="flex justify-between" style="margin-bottom: 20px; font-size: 0.9rem;">
+                    <label style="display: flex; gap: 8px; cursor: pointer;">
+                        <input type="checkbox" style="accent-color: var(--accent-color);"> Remember me
+                    </label>
+                    <a href="#" style="color: var(--text-muted);">Forgot Password?</a>
+                </div>
+
+                <button type="submit" class="auth-btn">Sign In</button>
+            </form>
+
+            <div class="auth-footer">
+                Don't have an account? <a href="register.html">Sign up</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/data.js"></script>
+    <script src="../js/main.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/cursor.js"></script>
+</body>
+
+</html>

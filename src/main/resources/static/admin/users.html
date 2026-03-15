@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Users - NEXUS Admin</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+
+<body style="background: #0a0a0a;">
+
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+        <a href="../index.html" class="admin-logo">NEXUS<span style="color: var(--accent-color);">.</span></a>
+
+        <nav class="admin-nav">
+            <a href="index.html" class="admin-nav-item"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
+            <a href="users.html" class="admin-nav-item active"><i class="fa-solid fa-users"></i> Users</a>
+            <a href="#" class="admin-nav-item"><i class="fa-solid fa-box"></i> Products</a>
+            <a href="#" class="admin-nav-item"><i class="fa-solid fa-receipt"></i> Orders</a>
+            <a href="#" class="admin-nav-item"><i class="fa-solid fa-gear"></i> Settings</a>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="admin-main">
+        <header class="admin-header">
+            <h1 class="admin-title">Users</h1>
+            <button class="btn-clean" onclick="openAddUserModal()"
+                style="padding: 10px 20px; font-size: 0.9rem; background: var(--accent-color); color: #000; border: none;">
+                <i class="fa-solid fa-plus"></i> Add User
+            </button>
+        </header>
+
+        <div class="data-table-wrapper">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>User</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Joined</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="users-table-body">
+                    <!-- JS Injected -->
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <!-- Add/Edit User Modal -->
+    <div class="modal-backdrop" id="user-modal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></span>
+            <h2 id="modal-title" style="margin-bottom: 20px;">Add New User</h2>
+
+            <form id="user-form">
+                <input type="hidden" id="user-id">
+
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px;">Full Name</label>
+                    <input type="text" id="name" class="form-input"
+                        style="width: 100%; padding: 10px; background: #222; border: 1px solid #333; color: #fff; border-radius: 8px;"
+                        required>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px;">Email</label>
+                    <input type="email" id="email" class="form-input"
+                        style="width: 100%; padding: 10px; background: #222; border: 1px solid #333; color: #fff; border-radius: 8px;"
+                        required>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 25px;">
+                    <label style="display: block; margin-bottom: 5px;">Role</label>
+                    <select id="role" class="form-input"
+                        style="width: 100%; padding: 10px; background: #222; border: 1px solid #333; color: #fff; border-radius: 8px;">
+                        <option value="User">User</option>
+                        <option value="Admin">Admin</option>
+                        <option value="Editor">Editor</option>
+                    </select>
+                </div>
+
+                <button type="submit"
+                    style="width: 100%; background: var(--accent-color); padding: 12px; border: none; font-weight: 700; cursor: pointer; border-radius: 8px;">Save
+                    User</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/admin.js"></script>
+    <script src="../js/cursor.js"></script>
+</body>
+
+</html>

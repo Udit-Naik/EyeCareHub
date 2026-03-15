@@ -1,0 +1,311 @@
+EYECAREHUB PROJECT DOCUMENTATION
+
+Project: EyeCareHub (E-commerce for eyewear products)
+Type: Full-stack web application (Spring Boot backend +  frontend)
+
+====================================================================
+1) PROJECT OVERVIEW
+====================================================================
+EyeCareHub is an e-commerce application focused on eyewear products. 
+The backend provides REST APIs for authentication, products, cart, orders, and admin operations. 
+Security is handled with JWT and role-based access control.
+
+Main goal of architecture:
+- Keep code modular and maintainable
+- Separate concerns (API layer, business logic, database access)
+- Build secure endpoints for user/admin operations
+- Support easy future scaling and integration
+
+
+====================================================================
+2) WHAT TECHNOLOGIES WE USED AND HOW
+====================================================================
+A) Backend Framework: Spring Boot (3.4.2)
+How used:
+- Created REST APIs using @RestController
+- Configured application through auto-configuration and properties
+- Used dependency injection with @Autowired/@Bean
+
+Why chosen:
+- Fast development with production-ready features
+- Strong ecosystem for security, validation, data access
+- Clean structure for layered architecture
+
+Possible alternatives:
+- Node.js + Express
+- Django / FastAPI (Python)
+- .NET Web API
+
+Why not alternatives in this project:
+- Team/project comfort and maturity in Java ecosystem
+- Spring Security + Spring Data integration is strong and quick to implement
+
+
+B) Language: Java
+How used:
+- Core backend logic, DTOs, services, domain models
+
+Why chosen:
+- Strong OOP support, type safety, enterprise-grade tooling
+
+Possible alternatives:
+- Kotlin (on Spring)
+- C#
+- TypeScript (Node backend)
+
+Why Java here:
+- Widely taught and practical for backend architecture learning
+- Good for interview/viva discussions on design patterns and layering
+
+
+C) Database: MongoDB
+How used:
+- Collections for users, products, carts, orders
+- Repository interfaces extend MongoRepository
+- Embedded style structures for cart/order item lists
+
+Why chosen:
+- Flexible schema for evolving e-commerce data
+- Document model matches cart/order nested structures naturally
+- Faster iteration during development
+
+Possible alternatives:
+- MySQL / PostgreSQL
+- Firebase Firestore
+
+Why MongoDB here:
+- Less upfront schema friction while developing features
+- Spring Data MongoRepository made CRUD and custom queries simple
+
+
+D) Security: Spring Security + JWT
+How used:
+- Login authenticates user and generates JWT token
+- Custom JWT filter validates token on requests
+- Stateless session policy used
+- @PreAuthorize for role-based endpoint control
+
+Why chosen:
+- Stateless auth is scalable for API-driven systems
+- JWT is standard for decoupled frontend-backend flow
+- Built-in Spring Security support reduces custom risk
+
+Possible alternatives:
+- Session/cookie-based auth
+- OAuth2 login only
+- API key style auth
+
+Why JWT here:
+- Better fit for modern frontend/API architecture
+- Easier to consume from multiple clients
+
+
+E) Validation and Exception Handling
+How used:
+- Bean Validation annotations in DTO/model classes
+- Global exception handler via @RestControllerAdvice
+
+Why chosen:
+- Centralized and consistent error responses
+- Cleaner controllers (less repetitive try/catch)
+
+Possible alternatives:
+- Manual validation checks inside every controller method
+
+Why current approach:
+- More maintainable, cleaner, and industry-standard
+
+
+F) Build/Dependency Management
+How used:
+- Primary backend dependencies are managed in pom.xml (Maven)
+
+Current note:
+- build.gradle also exists in repository, but project behavior and dependency setup are mainly Maven-driven.
+
+Recommendation:
+- Keep one primary build tool to avoid version/config drift.
+
+
+G) Frontend (Current State)
+How used:
+- Static files under src/main/resources/static
+- HTML/CSS/JavaScript pages and admin UI
+- Some frontend modules currently use localStorage/mock-style flow
+
+Why chosen:
+- Fast prototyping and UI demonstration
+- Easy to host directly from Spring Boot static resources
+
+Possible alternatives:
+- React / Angular / Vue frontend with separate build pipeline
+
+Why current approach:
+- Lower complexity for academic/project milestone delivery
+
+
+====================================================================
+3) PROJECT STRUCTURE AND WHY THIS STRUCTURE
+====================================================================
+Folder strategy follows layered design:
+- controller/: Handles HTTP requests/responses only
+- service/: Core business logic and workflows
+- repository/: Database access contracts
+- model/: Domain entities/documents
+- dto/: Request/response transfer objects
+- security/: JWT filter, security config, user details mapping
+- exception/: Centralized custom exceptions and handlers
+- resources/static/: Frontend assets and pages
+
+Why this structure:
+- Better readability and onboarding
+- Easier testing and maintenance
+- Changes in one layer do not heavily affect others
+
+
+====================================================================
+4) FEATURE LIST IMPLEMENTED
+====================================================================
+Customer features:
+- Registration and login
+- Product browsing and filtering
+- Cart management (add/remove/update quantity)
+- Place orders with payment type
+- View user orders
+
+Admin features:
+- Admin-protected routes
+- View all users
+- Delete users
+- View all orders
+- Update order status
+- Product create/update/delete (admin-only)
+
+Security features:
+- BCrypt password hashing
+- JWT token generation and validation
+- Role-based authorization (ROLE_USER, ROLE_ADMIN)
+- Protected API endpoints
+
+Platform/support features:
+- MongoDB backup/import helper scripts
+- Static frontend hosting from Spring Boot
+
+
+====================================================================
+5) WHAT WE COULD HAVE USED INSTEAD (AND TRADE-OFFS)
+====================================================================
+1. SQL database instead of MongoDB
+- Pros: strict schema, joins, relational integrity
+- Cons: more schema management effort for rapid changes
+- Why not selected: project needed faster iteration and nested cart/order documents
+
+2. Session auth instead of JWT
+- Pros: simpler for monolithic server-rendered apps
+- Cons: server-side session management complexity in scaling
+- Why not selected: JWT is better for API-first and stateless design
+
+3. React frontend instead of static HTML/JS
+- Pros: better component reusability, scalable frontend architecture
+- Cons: higher setup/build complexity, more integration work
+- Why not selected: project timeline favored quick stable delivery
+
+4. Single build tool cleanup from day 1
+- Pros: no confusion
+- Cons: migration/cleanup effort if team experiments multiple setups
+- Why not finalized yet: current priority was feature completion and backend flow
+
+
+====================================================================
+6) WHY KEY DESIGN DECISIONS WERE TAKEN
+====================================================================
+1. Layered architecture:
+To keep responsibilities clear and make code interview-friendly and maintainable.
+
+2. JWT + stateless security:
+To support scalable API pattern and clean auth boundaries.
+
+3. Role-based access with @PreAuthorize:
+To enforce security at method level and avoid accidental access leaks.
+
+4. DTO usage in auth flow:
+To avoid exposing internal entity details and maintain API contract clarity.
+
+5. Centralized exception handling:
+To standardize API error format and reduce duplicate code.
+
+6. MongoRepository usage:
+To reduce boilerplate and use convention-based queries quickly.
+
+
+====================================================================
+7) WHAT WE LEARNED FROM THIS PROJECT
+====================================================================
+Technical learnings:
+- How to build secure REST APIs in Spring Boot
+- How JWT auth lifecycle works (issue, verify, authorize)
+- How to design role-based endpoint controls
+- How to model e-commerce entities in MongoDB
+- How to structure a layered backend for long-term maintainability
+- How to use global exception handling and validation effectively
+
+Engineering/process learnings:
+- Importance of separating business logic from controllers
+- Importance of consistent response/error formats for frontend integration
+- Why build/dependency consistency matters (Maven vs Gradle cleanup)
+- How to design features incrementally (prototype first, hardening next)
+
+
+====================================================================
+8) FEATURE ENHANCEMENTS (NEXT PHASE ROADMAP)
+====================================================================
+High-priority enhancements:
+1. Full frontend-to-backend API integration
+- Replace localStorage simulation with real API calls for auth/cart/orders
+
+2. Security hardening
+- Move JWT secret to environment variables or secret manager
+- Add refresh token flow
+- Add rate limiting for auth endpoints
+
+3. Testing improvements
+- Enable and add unit/integration tests
+- Add security tests for protected routes and roles
+
+4. Build consistency
+- Standardize to one build system (prefer Maven for current setup)
+- Align Java version config across runtime and compiler
+
+5. Data and domain enhancements
+- Stock validation during order placement
+- Coupon and discount rules engine
+- Address management and order invoice support
+
+6. Admin enhancements
+- Dashboard analytics (revenue, top products, order trends)
+- Pagination/search for users and orders
+
+7. Production readiness
+- Dockerize app and MongoDB setup
+- CI/CD pipeline
+- Structured logging and monitoring (Actuator + centralized logs)
+
+
+====================================================================
+9) SHORT DEFENSE STATEMENT FOR MENTOR/VIVA
+====================================================================
+"We deliberately chose Spring Boot + MongoDB + JWT to build a modular 
+and secure e-commerce backend quickly while keeping the architecture industry-aligned.
+ The layered structure improved maintainability, role-based security protected critical endpoints, 
+ and MongoDB simplified nested cart/order modeling. We also identified clear next-phase improvements: 
+ complete frontend API integration, stronger test coverage, build-tool standardization, and production hardening."
+
+
+====================================================================
+10) CONCLUSION
+====================================================================
+This project is not just feature implementation;
+ it demonstrates architecture thinking, security fundamentals, 
+ API design discipline, and practical trade-off decisions under delivery constraints.
+  It also provides a realistic upgrade path from prototype-level frontend integration to 
+  production-grade full-stack deployment.
