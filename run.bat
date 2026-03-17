@@ -5,8 +5,8 @@ echo ========================================
 echo.
 echo Make sure MongoDB is running on localhost:27017
 echo.
-set JAVA_HOME=C:\Program Files\Java\jdk-25
-set MAVEN_HOME=C:\Users\sunny\maven\apache-maven-3.9.6
+set JAVA_HOME=C:\Program Files\Java\jdk-17.0.2
+set MAVEN_HOME=C:\Users\sunny\maven\apache-maven-3.9.0
 set PATH=%MAVEN_HOME%\bin;%JAVA_HOME%\bin;%PATH%
 cd /d "%~dp0"
 echo.
