@@ -17,8 +17,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function renderCart() {
     const container = document.getElementById('cart-container');
-    const cart = JSON.parse(localStorage.getItem('cart')) || [];
 
+    // Try backend cart API first
+    if (window.api && window.api.getCart) {
+        window.api.getCart().then(serverCart => {
+            renderCartFromArray(serverCart || []);
+        }).catch(() => {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            if (cart.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-cart fade-in">
+                        <i class="fa-solid fa-cart-arrow-down"></i>
+                        <h3>Your cart is empty</h3>
+                        <p>Looks like you haven't added anything yet.</p>
+                        <a href="categories.html" class="btn btn-primary" style="margin-top: 20px;">Start Shopping</a>
+                    </div>
+                `;
+                return;
+            }
+            renderCartFromArray(cart);
+        });
+        return;
+    }
+
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
     if (cart.length === 0) {
         container.innerHTML = `
             <div class="empty-cart fade-in">
@@ -30,28 +52,33 @@ function renderCart() {
         `;
         return;
     }
+    renderCartFromArray(cart);
+}
 
+function renderCartFromArray(cart) {
+    const container = document.getElementById('cart-container');
     let subtotal = 0;
 
-    const itemsHtml = cart.map((item, index) => {
-        subtotal += item.price * item.quantity;
+    const itemsHtml = cart.map((item) => {
+        subtotal += (item.price || 0) * (item.quantity || 1);
+        const id = item.id || item.productId || '';
         return `
             <div class="cart-item fade-in">
-                <img src="${item.image}" alt="${item.name}" class="cart-img">
+                <img src="${item.image || item.imageUrl || '/static/placeholder.png'}" alt="${item.name}" class="cart-img">
                 <div class="cart-details">
-                    <h3 class="cart-title">${item.name}</h3>
-                    <div class="cart-price">₹${item.price}</div>
+                    <h3 class="cart-title">${item.name || item.productName || 'Item'}</h3>
+                    <div class="cart-price">₹${item.price || 0}</div>
                 </div>
                 <div class="cart-actions">
                     <div class="quantity-selector">
-                        <button class="qty-btn" onclick="updateCartQty(${item.id}, -1)">-</button>
-                        <span class="qty-input">${item.quantity}</span>
-                        <button class="qty-btn" onclick="updateCartQty(${item.id}, 1)">+</button>
+                        <button class="qty-btn" onclick="updateCartQty('${id}', -1)">-</button>
+                        <span class="qty-input">${item.quantity || 1}</span>
+                        <button class="qty-btn" onclick="updateCartQty('${id}', 1)">+</button>
                     </div>
-                    <button class="remove-btn" onclick="removeFromCart(${item.id})">Remove</button>
+                    <button class="remove-btn" onclick="removeFromCart('${id}')">Remove</button>
                 </div>
                 <div style="font-weight: 600; min-width: 80px; text-align: right;">
-                    $${item.price * item.quantity}
+                    ₹${(item.price || 0) * (item.quantity || 1)}
                 </div>
             </div>
         `;
@@ -73,7 +100,7 @@ function renderCart() {
                 </div>
                 <div class="summary-row">
                     <span>Tax (8%)</span>
-                    <span>$${tax}</span>
+                    <span>₹${tax}</span>
                 </div>
                 <div class="summary-row">
                     <span>Shipping</span>
@@ -83,32 +110,61 @@ function renderCart() {
                     <span>Total</span>
                     <span>₹${total}</span>
                 </div>
-                <a href="checkout.html" class="btn btn-primary" style="width: 100%;">Proceed to Checkout</a>
+                <a href="checkout.html" class="btn btn-primary" style="width: 100%">Proceed to Checkout</a>
                 <a href="categories.html" style="display: block; text-align: center; margin-top: 15px; font-size: 0.9rem; text-decoration: underline;">Continue Shopping</a>
             </div>
         </div>
     `;
-}
+    updateCartCount();
 
 function updateCartQty(id, change) {
-    let cart = JSON.parse(localStorage.getItem('cart')) || [];
-    const item = cart.find(p => p.id === id);
+    // Try backend update first
+    if (window.api && window.api.updateCartQuantity) {
+        window.api.updateCartQuantity(id, change > 0 ? change : -1).then(() => {
+            renderCart();
+        }).catch(() => {
+            // fallback local
+            localUpdate();
+        });
+        return;
+    }
 
-    if (item) {
-        item.quantity += change;
-        if (item.quantity < 1) item.quantity = 1;
+    localUpdate();
+
+    function localUpdate() {
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const item = cart.find(p => String(p.id) === String(id));
+
+        if (item) {
+            item.quantity += change;
+            if (item.quantity < 1) item.quantity = 1;
+            localStorage.setItem('cart', JSON.stringify(cart));
+            renderCart();
+            updateCartCount();
+        }
+    }
+}
+
+function removeFromCart(id) {
+    if (window.api && window.api.removeFromCart) {
+        window.api.removeFromCart(id).then(() => {
+            renderCart();
+        }).catch(() => {
+            localRemove();
+        });
+        return;
+    }
+
+    localRemove();
+
+    function localRemove() {
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        cart = cart.filter(p => String(p.id) !== String(id));
         localStorage.setItem('cart', JSON.stringify(cart));
         renderCart();
         updateCartCount();
     }
 }
-
-function removeFromCart(id) {
-    let cart = JSON.parse(localStorage.getItem('cart')) || [];
-    cart = cart.filter(p => p.id !== id);
-    localStorage.setItem('cart', JSON.stringify(cart));
-    renderCart();
-    updateCartCount();
 }
 
 /* CHECKOUT LOGIC */

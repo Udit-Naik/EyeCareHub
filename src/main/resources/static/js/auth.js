@@ -38,22 +38,30 @@ function handleLogin(e) {
     }
 
     if (isValid) {
-        // Simulation
-        const user = {
-            name: 'Demo User',
-            email: email.value
-        };
-        localStorage.setItem('user', JSON.stringify(user));
-
-        // Button loading state
         const btn = e.target.querySelector('button');
-        const originalText = btn.innerText;
         btn.innerText = 'Signing In...';
         btn.disabled = true;
 
-        setTimeout(() => {
-            window.location.href = '../index.html'; // Redirect
-        }, 1500);
+        // Use backend auth when available
+        if (window.api && window.api.signin) {
+            window.api.signin(email.value, password.value).then(resp => {
+                // JwtResponse: token, id, username, email, roles
+                localStorage.setItem('jwtToken', resp.token || resp.accessToken || resp.token);
+                localStorage.setItem('user', JSON.stringify({ id: resp.id, username: resp.username, email: resp.email }));
+                window.location.href = '../index.html';
+            }).catch(err => {
+                btn.innerText = 'Sign In';
+                btn.disabled = false;
+                alert('Sign in failed: ' + (err.message || err));
+            });
+        } else {
+            // Fallback simulation
+            const user = { name: 'Demo User', email: email.value };
+            localStorage.setItem('user', JSON.stringify(user));
+            setTimeout(() => {
+                window.location.href = '../index.html';
+            }, 500);
+        }
     }
 }
 
@@ -107,21 +115,34 @@ function handleRegister(e) {
     }
 
     if (isValid) {
-        // Simulation
-        const user = {
-            name: name.value,
-            email: email.value,
-            mobile: mobile.value
-        };
-        localStorage.setItem('user', JSON.stringify(user));
-
         const btn = e.target.querySelector('button');
         btn.innerText = 'Creating Account...';
         btn.disabled = true;
 
-        setTimeout(() => {
-            window.location.href = '../index.html';
-        }, 1500);
+        const payload = {
+            username: name.value,
+            email: email.value,
+            password: password.value,
+            // roles omitted; default user role will be assigned by backend
+        };
+
+        if (window.api && window.api.signup) {
+            window.api.signup(payload).then(() => {
+                alert('Account created successfully. Please sign in.');
+                window.location.href = 'login.html';
+            }).catch(err => {
+                btn.innerText = 'Create Account';
+                btn.disabled = false;
+                alert('Signup failed: ' + (err.message || err));
+            });
+        } else {
+            // Fallback simulation
+            const user = { name: name.value, email: email.value, mobile: mobile.value };
+            localStorage.setItem('user', JSON.stringify(user));
+            setTimeout(() => {
+                window.location.href = '../index.html';
+            }, 500);
+        }
     }
 }
 

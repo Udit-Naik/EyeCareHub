@@ -110,3 +110,23 @@ function updateCartCount() {
 }
 
 // Sample Product Data handled in data.js
+
+// --- API helpers for frontend to call backend endpoints ---
+async function fetchProducts() {
+    try {
+        const res = await fetch('/api/products');
+        if (!res.ok) throw new Error('Network response was not ok: ' + res.status);
+        return await res.json();
+    } catch (err) {
+        console.error('fetchProducts error', err);
+        return [];
+    }
+}
+
+// Expose helpers for other scripts/pages
+window.api = Object.assign(window.api || {}, {
+    fetchProducts
+});
+
+// Example usage (uncomment where needed):
+// window.api.fetchProducts().then(products => console.log(products));

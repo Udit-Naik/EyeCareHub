@@ -51,7 +51,7 @@ function renderCart() {
                     <button class="remove-btn" onclick="removeFromCart(${item.id})">Remove</button>
                 </div>
                 <div style="font-weight: 600; min-width: 80px; text-align: right;">
-                    $${item.price * item.quantity}
+                    ₹${item.price * item.quantity}
                 </div>
             </div>
         `;
@@ -73,7 +73,7 @@ function renderCart() {
                 </div>
                 <div class="summary-row">
                     <span>Tax (8%)</span>
-                    <span>$${tax}</span>
+                    <span>₹${tax}</span>
                 </div>
                 <div class="summary-row">
                     <span>Shipping</span>

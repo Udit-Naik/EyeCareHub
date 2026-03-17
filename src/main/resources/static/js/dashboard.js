@@ -17,46 +17,75 @@ function checkUser() {
 }
 
 function loadProfile() {
+    const profileName = document.getElementById('profileName');
+    const profileEmail = document.getElementById('profileEmail');
+    const profileInitials = document.getElementById('profileInitials');
+
+    // Try backend first
+    if (window.api && window.api.getCurrentUser) {
+        window.api.getCurrentUser().then(user => {
+            if (profileName) profileName.innerText = user.username || user.name || 'User';
+            if (profileEmail) profileEmail.innerText = user.email || 'user@example.com';
+            if (profileInitials) profileInitials.innerText = (user.username || user.name || 'U').charAt(0).toUpperCase();
+            const nameInput = document.getElementById('editName');
+            const emailInput = document.getElementById('editEmail');
+            if (nameInput) nameInput.value = user.username || user.name || '';
+            if (emailInput) emailInput.value = user.email || '';
+        }).catch(() => {
+            // Fallback to localStorage
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            if (profileName) profileName.innerText = user.name || 'User';
+            if (profileEmail) profileEmail.innerText = user.email || 'user@example.com';
+            if (profileInitials) profileInitials.innerText = (user.name || 'U').charAt(0).toUpperCase();
+        });
+        return;
+    }
+
     const user = JSON.parse(localStorage.getItem('user') || '{}');
-
-    document.getElementById('profileName').innerText = user.name || 'User';
-    document.getElementById('profileEmail').innerText = user.email || 'user@example.com';
-
-    // Initials
-    const initials = (user.name || 'U').charAt(0).toUpperCase();
-    document.getElementById('profileInitials').innerText = initials;
-
-    // Form inputs
-    const nameInput = document.getElementById('editName');
-    const emailInput = document.getElementById('editEmail');
-    if (nameInput) nameInput.value = user.name || '';
-    if (emailInput) emailInput.value = user.email || '';
+    if (profileName) profileName.innerText = user.name || 'User';
+    if (profileEmail) profileEmail.innerText = user.email || 'user@example.com';
+    if (profileInitials) profileInitials.innerText = (user.name || 'U').charAt(0).toUpperCase();
 }
 
 function loadOrders() {
     const list = document.getElementById('order-list');
     if (!list) return;
 
-    // Mock Orders
+    // Try backend orders
+    if (window.api && window.api.getUserOrders) {
+        window.api.getUserOrders().then(orders => {
+            if (!Array.isArray(orders) || orders.length === 0) {
+                list.innerHTML = '<div class="muted">No orders found</div>';
+                return;
+            }
+            list.innerHTML = orders.map(order => `
+                <div class="order-card fade-in">
+                    <div class="order-header">
+                        <div>
+                            <strong>#${order.id || order._id || ''}</strong>
+                            <div style="font-size: 0.85rem; color: #888;">${new Date(order.createdAt || order.date || '').toLocaleDateString()}</div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="font-weight: 600;">₹${order.total || order.amount || 0}</div>
+                            <span class="order-status ${String(order.status || '').toLowerCase()}">${order.status || 'Processing'}</span>
+                        </div>
+                    </div>
+                    <div class="order-items">
+                        ${(order.items || []).map(i => `<img src="${i.imageUrl || i.image || '/static/placeholder.png'}" class="order-thumb">`).join('')}
+                    </div>
+                    <button class="btn btn-outline btn-sm" onclick="viewOrder('${order.id || order._id || ''}')">View Details</button>
+                </div>
+            `).join('');
+        }).catch(() => {
+            list.innerHTML = '<div class="muted">Unable to load orders from server</div>';
+        });
+        return;
+    }
+
+    // Fallback: show mock orders
     const orders = [
-        {
-            id: 'ORD-7829',
-            date: 'Oct 24, 2025',
-            total: 28999,
-            status: 'Processing',
-            items: [
-                'https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?q=80&w=1588&auto=format&fit=crop'
-            ]
-        },
-        {
-            id: 'ORD-1102',
-            date: 'Sep 12, 2025',
-            total: 10999,
-            status: 'Delivered',
-            items: [
-                'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?q=80&w=1587&auto=format&fit=crop'
-            ]
-        }
+        { id: 'ORD-7829', date: 'Oct 24, 2025', total: 28999, status: 'Processing', items: ['https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?q=80&w=1588&auto=format&fit=crop'] },
+        { id: 'ORD-1102', date: 'Sep 12, 2025', total: 10999, status: 'Delivered', items: ['https://images.unsplash.com/photo-1553062407-98eeb64c6a62?q=80&w=1587&auto=format&fit=crop'] }
     ];
 
     list.innerHTML = orders.map(order => `
