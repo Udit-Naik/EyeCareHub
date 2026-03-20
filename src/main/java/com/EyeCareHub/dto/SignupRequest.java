@@ -5,7 +5,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import java.util.Set;
-
+import jakarta.validation.constraints.Pattern;
+import java.util.HashSet;
 @Data
 public class SignupRequest {
     @NotBlank
@@ -16,10 +17,12 @@ public class SignupRequest {
     @Size(max = 50)
     @Email
     private String email;
+    private Set<String> roles = new HashSet<>();
 
-    private Set<String> roles;
+    @Pattern(regexp = "^[0-9]{10}$", message = "Mobile must be 10 digits")
+    private String mobile;  
 
     @NotBlank
     @Size(min = 6, max = 40)
-    private String password;
+    private String password;    
 }

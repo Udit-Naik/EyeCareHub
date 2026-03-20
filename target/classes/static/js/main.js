@@ -7,8 +7,51 @@ document.addEventListener('DOMContentLoaded', () => {
     updateCartCount();
     initTheme();
     initSearch();
+    initUserUI();
 });
 
+function initUserUI() {
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    const loginLink = document.getElementById("loginLink");
+    const avatar = document.getElementById("userAvatar");
+    const dropdown = document.getElementById("userDropdown");
+    const logoutBtn = document.getElementById("logoutBtn");
+
+    if (!loginLink || !avatar) return;
+
+    if (user) {
+        // Show avatar
+        loginLink.style.display = "none";
+        avatar.style.display = "block";
+
+        avatar.src = `https://ui-avatars.com/api/?name=${user.username}&background=0D8ABC&color=fff`;
+
+        // Toggle dropdown
+        avatar.onclick = () => {
+            dropdown.style.display =
+                dropdown.style.display === "block" ? "none" : "block";
+        };
+
+        // Logout
+        logoutBtn.onclick = () => {
+            localStorage.removeItem("user");
+            localStorage.removeItem("jwtToken");
+            window.location.href = "pages/login.html";
+        };
+
+        // Close dropdown when clicking outside
+        document.addEventListener("click", (e) => {
+            if (!document.getElementById("userSection").contains(e.target)) {
+                dropdown.style.display = "none";
+            }
+        });
+
+    } else {
+        loginLink.style.display = "block";
+        avatar.style.display = "none";
+    }
+}
 // Theme Logic
 function initTheme() {
     const theme = localStorage.getItem('theme');
@@ -57,7 +100,7 @@ function initSearch() {
 
     const triggers = document.querySelectorAll('.search-trigger'); // Add this class to nav search icon
     const close = modal.querySelector('.close-search');
-    const input = modal.querySelector('searchInput');
+    const input = modal.querySelector('#searchInput');
 
     triggers.forEach(t => t.addEventListener('click', () => {
         modal.classList.add('active');
@@ -100,13 +143,26 @@ function initNavbar() {
     });
 }
 
-// Mock Cart Logic for badge
+// Cart count badge — tries backend first, falls back to localStorage
 function updateCartCount() {
     const cartCount = document.getElementById('cart-count');
-    const cart = JSON.parse(localStorage.getItem('cart')) || [];
-    if (cartCount) {
-        cartCount.innerText = cart.reduce((acc, item) => acc + item.quantity, 0);
+    if (!cartCount) return;
+
+    if (window.api && window.api.isLoggedIn && window.api.isLoggedIn()) {
+        window.api.getCart().then(serverCart => {
+            const items = serverCart && serverCart.items ? serverCart.items : [];
+            const total = items.reduce((acc, item) => acc + (item.quantity || 0), 0);
+            cartCount.innerText = total;
+        }).catch(() => {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            cartCount.innerText = cart.reduce((acc, item) => acc + (item.quantity || 1), 0);
+        });
+    } else {
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+        cartCount.innerText = cart.reduce((acc, item) => acc + (item.quantity || 1), 0);
     }
 }
 
-// Sample Product Data handled in data.js
+// Product data is handled in data.js and api.js
+// updateCartCount is globally available for all pages
+window.updateCartCount = updateCartCount;

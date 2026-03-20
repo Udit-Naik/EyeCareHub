@@ -3,7 +3,9 @@
 */
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Create cursor elements
+
+    if ('ontouchstart' in window) return; // ❗ disable on mobile
+
     const cursorDot = document.createElement('div');
     cursorDot.className = 'cursor-dot';
 
@@ -13,51 +15,50 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.appendChild(cursorDot);
     document.body.appendChild(cursorOutline);
 
-    // Mouse Movement
-    let mouseX = 0;
-    let mouseY = 0;
-    let cursorX = 0;
-    let cursorY = 0;
+    let mouseX = 0, mouseY = 0;
+    let cursorX = 0, cursorY = 0;
 
-    // Dot follows instantly
     document.addEventListener('mousemove', (e) => {
         mouseX = e.clientX;
         mouseY = e.clientY;
 
-        cursorDot.style.left = `${mouseX}px`;
-        cursorDot.style.top = `${mouseY}px`;
-
-        // Keyframe animation for dot (optional, keeping it simple for now)
+        cursorDot.style.transform = `translate(${mouseX}px, ${mouseY}px)`;
     });
 
-    // Outline follows with delay (Lerp)
     function animateCursor() {
-        const dt = 0.15; // smoothness factor
+        const dt = 0.15;
 
         cursorX += (mouseX - cursorX) * dt;
         cursorY += (mouseY - cursorY) * dt;
 
-        cursorOutline.style.left = `${cursorX}px`;
-        cursorOutline.style.top = `${cursorY}px`;
-
+        cursorOutline.style.transform = `translate(${cursorX}px, ${cursorY}px)`;
         requestAnimationFrame(animateCursor);
     }
     animateCursor();
 
-    // Hover Effects
-    const interactables = document.querySelectorAll('a, button, .product-card, input');
-
-    interactables.forEach(el => {
-        el.addEventListener('mouseenter', () => {
-            cursorOutline.style.transform = 'translate(-50%, -50%) scale(1.5)';
+    // Hover effect
+    document.addEventListener('mouseover', (e) => {
+        if (e.target.closest('a, button, .product-card, input')) {
+            cursorOutline.style.transform += ' scale(1.5)';
             cursorOutline.style.backgroundColor = 'rgba(219, 242, 39, 0.1)';
             cursorOutline.style.borderColor = 'transparent';
-        });
+        }
+    });
 
-        el.addEventListener('mouseleave', () => {
-            cursorOutline.style.transform = 'translate(-50%, -50%) scale(1)';
+    document.addEventListener('mouseout', (e) => {
+        if (e.target.closest('a, button, .product-card, input')) {
+            cursorOutline.style.transform = cursorOutline.style.transform.replace(' scale(1.5)', '');
             cursorOutline.style.backgroundColor = 'transparent';
             cursorOutline.style.borderColor = 'var(--accent-color)';
-        });
+        }
+    });
+
+    // Click effect
+    document.addEventListener('mousedown', () => {
+        cursorOutline.style.transform += ' scale(0.8)';
+    });
+
+    document.addEventListener('mouseup', () => {
+        cursorOutline.style.transform = cursorOutline.style.transform.replace(' scale(0.8)', '');
     });
 });

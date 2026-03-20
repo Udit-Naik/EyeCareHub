@@ -10,7 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-
+import org.springframework.security.core.Authentication;
+import java.util.Map;
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/auth")
@@ -28,15 +29,23 @@ public class AuthController {
         authService.registerUser(signUpRequest);
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
     }
-
-    @GetMapping("/me")
-    public ResponseEntity<?> getCurrentUser() {
-        try {
-            UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            return ResponseEntity.ok(userDetails);
-        } catch (Exception e) {
+     @GetMapping("/me")
+    public ResponseEntity<?> getCurrentUser(Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()) {
             return ResponseEntity.status(401).body(new MessageResponse("Not authenticated"));
         }
+
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+
+        return ResponseEntity.ok(Map.of(
+            "id", userDetails.getId(),
+            "username", userDetails.getUsername(),
+            "email", userDetails.getEmail(),
+            "roles", userDetails.getAuthorities()
+            .stream()
+            .map(auth -> auth.getAuthority())
+            .toList()   
+         ));
     }
 
     @PostMapping("/logout")

@@ -1,348 +1,321 @@
-/* Admin Logic */
+/* admin.js — Admin Panel, fully wired to EyeCareHub backend API */
 
-// Mock Data if empty - Users
-if (!localStorage.getItem('admin_users')) {
-    const mockUsers = [
-        { id: 1, name: 'John Doe', email: 'john@example.com', role: 'Admin', joinDate: '2023-01-15' },
-        { id: 2, name: 'Alice Smith', email: 'alice@example.com', role: 'User', joinDate: '2023-02-20' },
-        { id: 3, name: 'Bob Johnson', email: 'bob@tech.com', role: 'User', joinDate: '2023-03-10' },
-        { id: 4, name: 'Emma Wilson', email: 'emma@design.com', role: 'Editor', joinDate: '2023-04-05' }
-    ];
-    localStorage.setItem('admin_users', JSON.stringify(mockUsers));
-}
+document.addEventListener('DOMContentLoaded', async () => {
 
-// Mock Data if empty - Orders
-if (!localStorage.getItem('admin_orders')) {
-    const mockOrders = [
-        { id: 1001, customer: 'Alice Smith', date: '2023-10-25', total: 99999, status: 'Completed' },
-        { id: 1002, customer: 'Bob Johnson', date: '2023-10-26', total: 20999, status: 'Processing' },
-        { id: 1003, customer: 'John Doe', date: '2023-10-27', total: 7399, status: 'Shipped' },
-        { id: 1004, customer: 'Emma Wilson', date: '2023-10-28', total: 37499, status: 'Pending' }
-    ];
-    localStorage.setItem('admin_orders', JSON.stringify(mockOrders));
-}
+    const user = JSON.parse(localStorage.getItem("user"));
 
-// Ensure Products exist (from data.js or generic fallback)
-if (!localStorage.getItem('products')) {
-    // If data.js loaded `products` variable, use it. Otherwise mock.
-    if (typeof products !== 'undefined') {
-        localStorage.setItem('products', JSON.stringify(products));
-    } else {
-        // Fallback mock
-        const fallbackProducts = [
-            { id: 1, name: 'Sony WH-1000XM5', category: 'Audio', price: 349, image: 'https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?q=80&w=500', stock: 45 },
-            { id: 2, name: 'MacBook Air M2', category: 'Electronics', price: 1199, image: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca4?q=80&w=500', stock: 12 }
-        ];
-        localStorage.setItem('products', JSON.stringify(fallbackProducts));
+    if (!user || !user.roles.includes("ROLE_ADMIN")) {
+        window.location.href = "/pages/login.html";
     }
-}
 
-document.addEventListener('DOMContentLoaded', () => {
-    // Determine Page
+    // ❌ Not logged in
+    if (!user) {
+        window.location.href = '../pages/login.html';
+        return;
+    }
+
+    // ❌ Not admin
+    if (!user.roles || !user.roles.includes("ROLE_ADMIN")) {
+        alert("Access Denied - Admin Only");
+        window.location.href = '../index.html';
+        return;
+    }
+
+    // ✅ Admin allowed → load data
     if (document.getElementById('total-users')) loadDashboardStats();
     if (document.getElementById('users-table-body')) loadUsersTable();
     if (document.getElementById('products-table-body')) loadProductsTable();
     if (document.getElementById('orders-table-body')) loadOrdersTable();
 });
 
-// --- Dashboard Functions ---
-function loadDashboardStats() {
-    const users = JSON.parse(localStorage.getItem('admin_users')) || [];
-    const orders = JSON.parse(localStorage.getItem('admin_orders')) || [];
+// ─── ADMIN AVATAR ─────────────────────────────────────────
+const user = JSON.parse(localStorage.getItem("user"));
+if (user && user.username) {
+    const avatar = document.getElementById("adminAvatar");
+    if (avatar) {
+        avatar.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.username)}&background=1a1a1a&color=00e5ff&bold=true`;
+        avatar.style.display = "block";
+    }
+    const nameEl = document.getElementById("adminName");
 
-    // Revenue Calculation (Mock)
-    const revenue = orders.reduce((acc, order) => acc + order.total, 0);
-
-    animateValue("total-users", 0, users.length, 1000);
-    animateValue("total-orders", 0, orders.length, 1500);
-    animateValue("total-revenue", 0, revenue, 2000, "₹");
+    if (user && nameEl) {
+        nameEl.innerText = user.username;
+    }
+}
+/* ─── DASHBOARD STATS ─────────────────────────────────────── */
+async function loadDashboardStats() {
+    try {
+        const [users, orders, products] = await Promise.all([
+            window.api.getAllUsers().catch(() => []),
+            window.api.getAllOrders().catch(() => []),
+            window.api.getProducts().catch(() => [])
+        ]);
+        const revenue = (orders || []).reduce((acc, o) => acc + (o.totalPrice || 0), 0);
+        animateValue('total-users', 0, (users || []).length, 1000);
+        animateValue('total-orders', 0, (orders || []).length, 1500);
+        animateValue('total-revenue', 0, Math.round(revenue), 2000, '₹');
+        animateValue('total-products', 0, (products || []).length, 1200);
+    } catch (err) {
+        console.error('Dashboard stats error', err);
+    }
 }
 
-function animateValue(id, start, end, duration, prefix = "") {
-    const obj = document.getElementById(id);
-    if (!obj) return;
-
-    let startTimestamp = null;
-    const step = (timestamp) => {
-        if (!startTimestamp) startTimestamp = timestamp;
-        const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-        const value = Math.floor(progress * (end - start) + start);
-        obj.innerHTML = prefix + value.toLocaleString();
-        if (progress < 1) {
-            window.requestAnimationFrame(step);
-        }
+function animateValue(id, start, end, duration, prefix = '') {
+    const el = document.getElementById(id);
+    if (!el) return;
+    let startTs = null;
+    const step = ts => {
+        if (!startTs) startTs = ts;
+        const progress = Math.min((ts - startTs) / duration, 1);
+        el.innerHTML = prefix + Math.floor(progress * (end - start) + start).toLocaleString();
+        if (progress < 1) requestAnimationFrame(step);
     };
-    window.requestAnimationFrame(step);
+    requestAnimationFrame(step);
 }
 
-// --- User CRUD Functions ---
-function loadUsersTable() {
-    const users = JSON.parse(localStorage.getItem('admin_users')) || [];
+/* ─── USERS TABLE ─────────────────────────────────────────── */
+async function loadUsersTable() {
     const tbody = document.getElementById('users-table-body');
     if (!tbody) return;
-    tbody.innerHTML = '';
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#888;padding:20px;">Loading...</td></tr>';
 
-    users.forEach(user => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-            <td>#${user.id}</td>
-            <td>
-                <div style="display: flex; align-items: center; gap: 10px;">
-                    <div style="width: 30px; height: 30px; background: #333; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem;">${user.name.charAt(0)}</div>
-                    ${user.name}
-                </div>
-            </td>
-            <td>${user.email}</td>
-            <td><span style="padding: 5px 10px; background: rgba(255,255,255,0.1); border-radius: 20px; font-size: 0.8rem;">${user.role}</span></td>
-            <td>${user.joinDate}</td>
-            <td>
-                <button class="action-btn" onclick="editUser(${user.id})"><i class="fa-solid fa-pen"></i></button>
-                <button class="action-btn btn-delete" onclick="deleteUser(${user.id})"><i class="fa-solid fa-trash"></i></button>
-            </td>
-        `;
-        tbody.appendChild(tr);
-    });
+    try {
+        const users = await window.api.getAllUsers();
+        if (!users || users.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#888;padding:20px;">No users found</td></tr>';
+            return;
+        }
+        tbody.innerHTML = users.map(user => `
+            <tr>
+                <td>#${user.id || ''}</td>
+                <td>
+                    <div style="display:flex;align-items:center;gap:10px;">
+                        <div style="width:34px;height:34px;background:#1a1a1a;border:1px solid #333;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.85rem;font-weight:600;">
+                            ${(user.username || user.email || 'U').charAt(0).toUpperCase()}
+                        </div>
+                        ${user.username || '—'}
+                    </div>
+                </td>
+                <td>${user.email || '—'}</td>
+                <td>
+                    ${(user.roles || []).map(r =>
+            `<span style="padding:4px 10px;border-radius:20px;font-size:0.75rem;font-weight:600;background:${r === 'ROLE_ADMIN' ? 'rgba(0,229,255,0.15)' : 'rgba(255,255,255,0.08)'};color:${r === 'ROLE_ADMIN' ? '#00e5ff' : '#888'};">${r.replace('ROLE_', '')}</span>`
+        ).join(' ')}
+                </td>
+                <td>
+                    <button class="action-btn btn-delete" onclick="handleDeleteUser('${user.id}')">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+                </td>
+            </tr>
+        `).join('');
+    } catch (err) {
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:#f87171;padding:20px;">Error: ${err.message || 'Could not load users'}</td></tr>`;
+    }
 }
 
-window.deleteUser = function (id) {
-    if (confirm('Are you sure you want to delete this user?')) {
-        let users = JSON.parse(localStorage.getItem('admin_users'));
-        users = users.filter(u => u.id !== id);
-        localStorage.setItem('admin_users', JSON.stringify(users));
-        loadUsersTable();
+window.handleDeleteUser = async function (userId) {
+    if (!confirm('Delete this user? This cannot be undone.')) return;
+    try {
+        await window.api.deleteUser(userId);
         showToast('User deleted successfully');
-    }
-}
-
-// User Modal DOM Elements
-const userModal = document.getElementById('user-modal');
-if (userModal) {
-    const userForm = document.getElementById('user-form');
-
-    window.openAddUserModal = function () {
-        document.getElementById('modal-title').innerText = 'Add New User';
-        document.getElementById('user-id').value = '';
-        userForm.reset();
-        userModal.classList.add('open');
-    }
-
-    window.closeModal = function () {
-        userModal.classList.remove('open');
-    }
-
-    window.editUser = function (id) {
-        const users = JSON.parse(localStorage.getItem('admin_users'));
-        const user = users.find(u => u.id === id);
-        if (user) {
-            document.getElementById('modal-title').innerText = 'Edit User';
-            document.getElementById('user-id').value = user.id;
-            document.getElementById('name').value = user.name;
-            document.getElementById('email').value = user.email;
-            document.getElementById('role').value = user.role;
-            userModal.classList.add('open');
-        }
-    }
-
-    userForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const id = document.getElementById('user-id').value;
-        const name = document.getElementById('name').value;
-        const email = document.getElementById('email').value;
-        const role = document.getElementById('role').value;
-
-        let users = JSON.parse(localStorage.getItem('admin_users'));
-
-        if (id) {
-            const index = users.findIndex(u => u.id == id);
-            if (index !== -1) users[index] = { ...users[index], name, email, role };
-        } else {
-            users.push({ id: Date.now(), name, email, role, joinDate: new Date().toISOString().split('T')[0] });
-        }
-
-        localStorage.setItem('admin_users', JSON.stringify(users));
         loadUsersTable();
-        closeModal();
-        showToast('User saved successfully');
-    });
-}
-
-// --- Product CRUD Functions ---
-function loadProductsTable() {
-    // Try to get from localStorage first (edited data), else fallback to data.js variable if available
-    let products = JSON.parse(localStorage.getItem('products'));
-    if (!products && typeof window.products !== 'undefined') {
-        products = window.products;
+    } catch (err) {
+        showToast('Error: ' + (err.message || 'Could not delete user'), true);
     }
+};
 
+/* ─── PRODUCTS TABLE ──────────────────────────────────────── */
+async function loadProductsTable() {
     const tbody = document.getElementById('products-table-body');
-    if (!tbody || !products) return;
+    if (!tbody) return;
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#888;padding:20px;">Loading...</td></tr>';
 
-    tbody.innerHTML = '';
-    products.forEach(p => {
-        const displayImage = getAutoImageForProduct(p.title || p.name, p.category, p.image);
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-            <td><img src="${displayImage}" style="width: 40px; height: 40px; border-radius: 8px; object-fit: cover;"></td>
-            <td>${p.title || p.name}</td>
-            <td>${p.category}</td>
-            <td>₹${p.price}</td>
-            <td>${p.stock || Math.floor(Math.random() * 50) + 1}</td>
-            <td>
-                <button class="action-btn" onclick="editProduct(${p.id})"><i class="fa-solid fa-pen"></i></button>
-                <button class="action-btn btn-delete" onclick="deleteProduct(${p.id})"><i class="fa-solid fa-trash"></i></button>
-            </td>
-        `;
-        tbody.appendChild(tr);
-    });
+    try {
+        const products = await window.api.getProducts();
+        if (!products || products.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#888;padding:20px;">No products found</td></tr>';
+            return;
+        }
+        tbody.innerHTML = products.map(p => {
+            const img = p.imageUrl || getAutoImage(p.name, p.category);
+            return `
+                <tr>
+                    <td><img src="${img}" style="width:42px;height:42px;border-radius:8px;object-fit:cover;"></td>
+                    <td>${p.name || '—'}</td>
+                    <td>${p.category || '—'}</td>
+                    <td>₹${p.price || 0}</td>
+                    <td><span style="color:${(p.stock || 0) < 5 ? '#f87171' : '#4ade80'};">${p.stock || 0}</span></td>
+                    <td>
+                        <button class="action-btn" onclick="openEditProduct('${p.id}')"><i class="fa-solid fa-pen"></i></button>
+                        <button class="action-btn btn-delete" onclick="handleDeleteProduct('${p.id}')"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                </tr>
+            `;
+        }).join('');
+        // Store for edit modal
+        window._adminProducts = products;
+    } catch (err) {
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:#f87171;padding:20px;">Error: ${err.message}</td></tr>`;
+    }
 }
 
-function getAutoImageForProduct(name, category, imageInput) {
-    const trimmed = (imageInput || '').trim();
-    if (trimmed.startsWith('https://') || trimmed.startsWith('http://')) return trimmed;
-
+function getAutoImage(name, category) {
     const label = `${name || ''} ${category || ''}`.toLowerCase();
-    if (label.includes('aviator')) return 'https://images.unsplash.com/photo-1572635196237-14b3f281503f?q=80&w=1760&auto=format&fit=crop';
-    if (label.includes('oakley') || label.includes('sunglass')) return 'https://images.unsplash.com/photo-1511499767150-a48a237f0083?q=80&w=1760&auto=format&fit=crop';
-    if (label.includes('computer') || label.includes('blue')) return 'https://images.unsplash.com/photo-1577922232320-f47d4e51240a?q=80&w=1740&auto=format&fit=crop';
-    if (label.includes('contact') || label.includes('acuvue') || label.includes('disposable')) return 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?q=80&w=1740&auto=format&fit=crop';
-    if (label.includes('wayfarer') || label.includes('eyeglass') || label.includes('frame')) return 'https://images.unsplash.com/photo-1574258495973-f010dfbb5371?q=80&w=1740&auto=format&fit=crop';
-
-    return 'https://images.unsplash.com/photo-1511499767150-a48a237f0083?q=80&w=1740&auto=format&fit=crop';
+    if (label.includes('sunglass') || label.includes('aviator')) return 'https://images.unsplash.com/photo-1572635196237-14b3f281503f?q=80&w=200';
+    if (label.includes('computer')) return 'https://images.unsplash.com/photo-1577922232320-f47d4e51240a?q=80&w=200';
+    if (label.includes('contact')) return 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?q=80&w=200';
+    return 'https://images.unsplash.com/photo-1574258495973-f010dfbb5371?q=80&w=200';
 }
+
+window.openAddProductModal = function () {
+    const modal = document.getElementById('product-modal');
+    if (!modal) return;
+    document.getElementById('product-modal-title').innerText = 'Add New Product';
+    document.getElementById('product-id').value = '';
+    document.getElementById('product-form').reset();
+    modal.classList.add('open');
+};
+
+window.closeProductModal = function () {
+    const modal = document.getElementById('product-modal');
+    if (modal) modal.classList.remove('open');
+};
+
+window.openEditProduct = function (id) {
+    const products = window._adminProducts || [];
+    const p = products.find(x => String(x.id) === String(id));
+    if (!p) return;
+    document.getElementById('product-modal-title').innerText = 'Edit Product';
+    document.getElementById('product-id').value = p.id;
+    document.getElementById('product-name').value = p.name || '';
+    document.getElementById('product-category').value = p.category || '';
+    document.getElementById('product-brand').value = p.brand || '';
+    document.getElementById('product-price').value = p.price || '';
+    document.getElementById('product-stock').value = p.stock || '';
+    document.getElementById('product-image').value = p.imageUrl || '';
+    const modal = document.getElementById('product-modal');
+    if (modal) modal.classList.add('open');
+};
+
+window.handleDeleteProduct = async function (id) {
+    if (!confirm('Delete this product?')) return;
+    try {
+        await window.api.deleteProduct(id);
+        showToast('Product deleted');
+        loadProductsTable();
+    } catch (err) {
+        showToast('Error: ' + (err.message || 'Could not delete product'), true);
+    }
+};
 
 const productModal = document.getElementById('product-modal');
 if (productModal) {
     const productForm = document.getElementById('product-form');
-
-    window.openAddProductModal = function () {
-        document.getElementById('product-modal-title').innerText = 'Add New Product';
-        document.getElementById('product-id').value = '';
-        productForm.reset();
-        productModal.classList.add('open');
-    }
-
-    window.closeProductModal = function () {
-        productModal.classList.remove('open');
-    }
-
-    window.editProduct = function (id) {
-        let products = JSON.parse(localStorage.getItem('products')) || [];
-        const p = products.find(i => i.id == id);
-        if (p) {
-            document.getElementById('product-modal-title').innerText = 'Edit Product';
-            document.getElementById('product-id').value = p.id;
-            document.getElementById('product-name').value = p.title || p.name;
-            document.getElementById('product-category').value = p.category;
-            document.getElementById('product-price').value = p.price;
-            document.getElementById('product-stock').value = p.stock || 10;
-            document.getElementById('product-image').value = p.image;
-            productModal.classList.add('open');
-        }
-    }
-
-    window.deleteProduct = function (id) {
-        if (confirm('Delete this product?')) {
-            let products = JSON.parse(localStorage.getItem('products')) || [];
-            products = products.filter(p => p.id != id);
-            localStorage.setItem('products', JSON.stringify(products));
-            loadProductsTable();
-            showToast('Product deleted');
-        }
-    }
-
-    productForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const id = document.getElementById('product-id').value;
-        const name = document.getElementById('product-name').value;
-        const category = document.getElementById('product-category').value;
-        const price = Number(document.getElementById('product-price').value);
-        const stock = Number(document.getElementById('product-stock').value);
-        const image = getAutoImageForProduct(name, category, document.getElementById('product-image').value);
-
-        let products = JSON.parse(localStorage.getItem('products')) || [];
-
-        if (id) {
-            const index = products.findIndex(p => p.id == id);
-            if (index !== -1) {
-                products[index] = { ...products[index], title: name, name: name, category, price, stock, image };
+    if (productForm) {
+        productForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('product-id').value;
+            const productData = {
+                name: document.getElementById('product-name').value,
+                category: document.getElementById('product-category').value,
+                brand: document.getElementById('product-brand') ? document.getElementById('product-brand').value : '',
+                gender: document.getElementById('product-gender') ? document.getElementById('product-gender').value : 'Unisex',
+                price: Number(document.getElementById('product-price').value),
+                stock: Number(document.getElementById('product-stock').value),
+                imageUrl: document.getElementById('product-image').value || getAutoImage(document.getElementById('product-name').value, document.getElementById('product-category').value),
+                discount: 0,
+                rating: 0
+            };
+            try {
+                if (id) {
+                    await window.api.updateProduct(id, productData);
+                    showToast('Product updated');
+                } else {
+                    await window.api.createProduct(productData);
+                    showToast('Product created');
+                }
+                window.closeProductModal();
+                loadProductsTable();
+            } catch (err) {
+                showToast('Error: ' + (err.message || 'Could not save product'), true);
             }
-        } else {
-            products.push({
-                id: Date.now(),
-                title: name,
-                name: name,
-                category,
-                price,
-                stock,
-                image
-            });
-        }
-
-        localStorage.setItem('products', JSON.stringify(products));
-        loadProductsTable();
-        closeProductModal();
-        showToast('Product saved');
-    });
+        });
+    }
 }
 
-// --- Order Management Functions ---
-function loadOrdersTable() {
-    const orders = JSON.parse(localStorage.getItem('admin_orders')) || [];
+/* ─── ORDERS TABLE ────────────────────────────────────────── */
+async function loadOrdersTable() {
     const tbody = document.getElementById('orders-table-body');
     if (!tbody) return;
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#888;padding:20px;">Loading...</td></tr>';
 
-    tbody.innerHTML = '';
-    orders.forEach(order => {
-        const tr = document.createElement('tr');
-        // Status Colors
-        let statusStyle = 'background: rgba(255,255,255,0.1); color: #fff;';
-        if (order.status === 'Completed') statusStyle = 'background: rgba(0,255,0,0.2); color: #4ade80;';
-        if (order.status === 'Pending') statusStyle = 'background: rgba(255,255,0,0.2); color: #facc15;';
-        if (order.status === 'Shipped') statusStyle = 'background: rgba(0,0,255,0.2); color: #60a5fa;';
-
-        tr.innerHTML = `
-            <td>#${order.id}</td>
-            <td>${order.customer}</td>
-            <td>${order.date}</td>
-            <td>₹${order.total}</td>
-            <td><span style="padding: 5px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; ${statusStyle}">${order.status}</span></td>
-            <td>
-                <select onchange="updateOrderStatus(${order.id}, this.value)" style="background: #222; color: #fff; border: 1px solid #444; padding: 5px; border-radius: 4px;">
-                    <option value="Processing" ${order.status === 'Processing' ? 'selected' : ''}>Processing</option>
-                    <option value="Shipped" ${order.status === 'Shipped' ? 'selected' : ''}>Shipped</option>
-                    <option value="Completed" ${order.status === 'Completed' ? 'selected' : ''}>Completed</option>
-                    <option value="Pending" ${order.status === 'Pending' ? 'selected' : ''}>Pending</option>
-                </select>
-            </td>
-        `;
-        tbody.appendChild(tr);
-    });
-}
-
-window.updateOrderStatus = function (id, newStatus) {
-    let orders = JSON.parse(localStorage.getItem('admin_orders'));
-    const index = orders.findIndex(o => o.id == id);
-    if (index !== -1) {
-        orders[index].status = newStatus;
-        localStorage.setItem('admin_orders', JSON.stringify(orders));
-        loadOrdersTable(); // Refresh to update colors
-        showToast(`Order #${id} updated to ${newStatus}`);
+    try {
+        const orders = await window.api.getAllOrders();
+        if (!orders || orders.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#888;padding:20px;">No orders found</td></tr>';
+            return;
+        }
+        tbody.innerHTML = orders.map(order => {
+            const st = (order.status || 'PENDING').toUpperCase();
+            const stColors = {
+                PENDING: 'rgba(250,204,21,0.2);color:#facc15',
+                CONFIRMED: 'rgba(0,229,255,0.15);color:#00e5ff',
+                SHIPPED: 'rgba(96,165,250,0.2);color:#60a5fa',
+                DELIVERED: 'rgba(74,222,128,0.2);color:#4ade80',
+                CANCELLED: 'rgba(248,113,113,0.2);color:#f87171'
+            };
+            const stStyle = stColors[st] || 'rgba(255,255,255,0.1);color:#fff';
+            const date = order.createdAt ? new Date(order.createdAt).toLocaleDateString('en-IN') : '—';
+            return `
+                <tr>
+                    <td>#${(order.id || '').substring(0, 8)}...</td>
+                    <td>${order.userId || '—'}</td>
+                    <td>${date}</td>
+                    <td>₹${order.totalPrice || 0}</td>
+                    <td><span style="padding:5px 12px;border-radius:20px;font-size:0.75rem;font-weight:600;background:${stStyle};">${st}</span></td>
+                    <td>
+                        <select onchange="handleUpdateOrderStatus('${order.id}', this.value)"
+                            style="background:#1a1a1a;color:#fff;border:1px solid #333;padding:6px 10px;border-radius:6px;cursor:pointer;">
+                            <option value="PENDING" ${st === 'PENDING' ? 'selected' : ''}>PENDING</option>
+                            <option value="CONFIRMED" ${st === 'CONFIRMED' ? 'selected' : ''}>CONFIRMED</option>
+                            <option value="SHIPPED" ${st === 'SHIPPED' ? 'selected' : ''}>SHIPPED</option>
+                            <option value="DELIVERED" ${st === 'DELIVERED' ? 'selected' : ''}>DELIVERED</option>
+                            <option value="CANCELLED" ${st === 'CANCELLED' ? 'selected' : ''}>CANCELLED</option>
+                        </select>
+                    </td>
+                </tr>
+            `;
+        }).join('');
+    } catch (err) {
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:#f87171;padding:20px;">Error: ${err.message}</td></tr>`;
     }
 }
 
-function showToast(msg) {
+window.handleUpdateOrderStatus = async function (orderId, newStatus) {
+    try {
+        await window.api.updateOrderStatus(orderId, newStatus);
+        showToast(`Order updated to ${newStatus}`);
+        loadOrdersTable();
+    } catch (err) {
+        showToast('Error: ' + (err.message || 'Could not update order'), true);
+    }
+};
+
+/* ─── SHARED HELPERS ──────────────────────────────────────── */
+window.adminLogout = function () {
+    if (window.api && window.api.logout) window.api.logout();
+    else {
+        localStorage.removeItem('jwtToken');
+        localStorage.removeItem('user');
+        window.location.href = '../pages/login.html';
+    }
+};
+
+function showToast(msg, isError = false) {
     const toast = document.createElement('div');
-    toast.className = 'toast show';
-    toast.style.position = 'fixed';
-    toast.style.bottom = '20px';
-    toast.style.right = '20px';
-    toast.style.background = 'var(--accent-color)';
-    toast.style.color = '#000';
-    toast.style.padding = '15px 30px';
-    toast.style.borderRadius = '30px';
-    toast.style.fontWeight = '600';
-    toast.style.zIndex = '9999';
+    toast.style.cssText = `position:fixed;bottom:25px;right:25px;background:${isError ? '#f87171' : '#00e5ff'};color:#000;padding:14px 28px;border-radius:30px;font-weight:600;font-size:0.9rem;z-index:9999;`;
     toast.innerText = msg;
     document.body.appendChild(toast);
-    setTimeout(() => toast.remove(), 3000);
+    setTimeout(() => toast.remove(), 3500);
 }

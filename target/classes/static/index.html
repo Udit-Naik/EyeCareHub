@@ -42,11 +42,46 @@
                 <li><a href="pages/categories.html?category=Computer Glasses" class="nav-link">Computer Glasses</a></li>
             </ul>
             <div class="nav-icons">
-                <button class="icon-btn search-trigger"><i class="fa-solid fa-magnifying-glass"></i></button>
+                <button class="icon-btn search-trigger">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+
                 <a href="pages/cart.html" class="icon-btn">
                     <i class="fa-solid fa-bag-shopping"></i>
                     <span class="badge" id="cart-count">0</span>
                 </a>
+
+                <!-- 👇 ADD THIS HERE -->
+                <div id="userSection" style="position: relative;">
+
+                    <!-- Login icon (before login) -->
+                    <a href="pages/login.html" id="loginLink" class="icon-btn">
+                        <i class="fa-solid fa-user"></i>
+                    </a>
+
+                    <!-- Avatar (after login) -->
+                    <img id="userAvatar"
+                        style="width:32px; height:32px; border-radius:50%; display:none; cursor:pointer;">
+
+                    <!-- 👇 Dropdown -->
+                    <div id="userDropdown" style="
+        display:none;
+        position:absolute;
+        right:0;
+        top:40px;
+        background:#111;
+        border:1px solid #333;
+        border-radius:8px;
+        padding:10px;
+        min-width:120px;
+        z-index:1000;
+    ">
+                        <div id="logoutBtn" style="cursor:pointer; padding:8px;">
+                            Logout
+                        </div>
+                    </div>
+
+                </div>
             </div>
         </div>
     </nav>
@@ -142,7 +177,7 @@
                     <div style="display: flex; gap: 10px; margin-top: 10px;">
                         <img src="https://i.pinimg.com/736x/26/96/87/269687784c9486d94d19f19c494afb5e.jpg"
                             style="border-radius: 8px;">
-                       
+
                     </div>
                 </div>
 
@@ -311,7 +346,7 @@
                 <a href="#" style="color: inherit;">Twitter</a>
                 <a href="#" style="color: inherit;">Manifesto</a>
             </div>
-            <p style="margin-top: 40px; font-size: 0.8rem; color: #444;">&copy; 2026  EyeCareHub</p>
+            <p style="margin-top: 40px; font-size: 0.8rem; color: #444;">&copy; 2026 EyeCareHub</p>
         </div>
     </footer>
 
@@ -319,6 +354,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     <script src="js/data.js"></script>
+    <script src="js/api.js"></script>
     <script src="js/main.js"></script>
     <script src="js/cursor.js"></script>
 

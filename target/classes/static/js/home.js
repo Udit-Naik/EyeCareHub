@@ -55,14 +55,26 @@ function initHeroAnimations() {
 function renderFeaturedProducts() {
     const container = document.getElementById('featured-products');
     if (!container) return;
+    // Try backend first
+    if (window.api && window.api.getProducts) {
+        window.api.getProducts().then(data => {
+            const list = Array.isArray(data) ? data.slice(0, 8) : [];
+            list.forEach(p => appendCard(container, p));
+        }).catch(() => {
+            (window.products || []).forEach(p => appendCard(container, p));
+        });
+        return;
+    }
 
-    // Use global products array from main.js
-    products.forEach(product => {
+    // Fallback to local products
+    (window.products || []).forEach(p => appendCard(container, p));
+
+    function appendCard(container, product) {
         const card = document.createElement('div');
         card.className = 'product-card';
         card.innerHTML = `
             <div class="product-img-wrapper">
-                <img src="${product.image}" alt="${product.name}" class="product-img">
+                <img src="${product.image || product.imageUrl}" alt="${product.name}" class="product-img">
                 <div class="product-actions">
                     <button class="action-btn" title="Add to Cart"><i class="fa-solid fa-plus"></i></button>
                     <button class="action-btn" title="Quick View"><i class="fa-regular fa-eye"></i></button>
@@ -72,10 +84,10 @@ function renderFeaturedProducts() {
                 <h3>${product.name}</h3>
                 <div class="flex justify-between">
                     <span class="product-price">₹${product.price}</span>
-                    <span style="font-size: 0.8rem; color: #666;">${product.category}</span>
+                    <span style="font-size: 0.8rem; color: #666;">${product.category || ''}</span>
                 </div>
             </div>
         `;
         container.appendChild(card);
-    });
+    }
 }

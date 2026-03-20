@@ -25,49 +25,93 @@
             <div class="auth-logo">EYECAREHUB<span class="text-accent">.</span></div>
             <h2 class="auth-title">Create Account</h2>
 
-            <form id="registerForm" novalidate>
+            <form id="registerForm" novalidate autocomplete="off">
+
                 <div class="form-group">
                     <label>Full Name</label>
-                    <input type="text" id="name" class="form-input" placeholder="John Doe">
-                    <div class="error-msg">Name is required</div>
+                    <input type="text" id="name" class="form-input" placeholder="John Doe" required>
+                    <div class="error-msg" id="nameError"></div>
                 </div>
 
                 <div class="form-group">
                     <label>Email Address</label>
-                    <input type="email" id="email" class="form-input" placeholder="name@example.com">
-                    <div class="error-msg">Please enter a valid email</div>
+                    <input type="email" id="email" class="form-input" placeholder="name@example.com" required>
+                    <div class="error-msg" id="emailError"></div>
                 </div>
 
                 <div class="form-group">
                     <label>Mobile Number</label>
-                    <input type="tel" id="mobile" class="form-input" placeholder="+1 234 567 890">
-                    <div class="error-msg">Valid mobile number required</div>
+                    <input type="tel" id="mobile" class="form-input" placeholder="9876543210" required>
+                    <div class="error-msg" id="mobileError"></div>
                 </div>
 
                 <div class="form-group">
                     <label>Password</label>
                     <div class="password-wrapper">
-                        <input type="password" id="password" class="form-input" placeholder="Create strong password">
+                        <input type="password" id="password" class="form-input" placeholder="Create strong password"
+                            required>
                         <i class="fa-regular fa-eye password-toggle" onclick="togglePassword('password')"></i>
                     </div>
-                    <div class="error-msg">Min 8 chars, 1 uppercase, 1 number</div>
+                    <div class="error-msg" id="passwordError"></div>
                 </div>
 
                 <div class="form-group">
                     <label>Confirm Password</label>
-                    <input type="password" id="confirmPassword" class="form-input" placeholder="Confirm password">
-                    <div class="error-msg">Passwords do not match</div>
+                    <input type="password" id="confirmPassword" class="form-input" placeholder="Confirm password"
+                        required>
+                    <div class="error-msg" id="confirmError"></div>
                 </div>
-
                 <button type="submit" class="auth-btn">Create Account</button>
             </form>
+
+            <div id="form-message" style="margin-top:10px; text-align:center;"></div>
 
             <div class="auth-footer">
                 Already have an account? <a href="login.html">Log in</a>
             </div>
         </div>
     </div>
+    <!-- <div class="auth-container">
+        <div class="auth-card">
+            <h2>Create Account</h2>
 
+            <form id="registerForm">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="name" class="form-input" placeholder="John Doe">
+                    <div class="error-msg" id="nameError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="email" class="form-input" placeholder="name@example.com">
+                    <div class="error-msg" id="emailError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label>Mobile</label>
+                    <input type="tel" id="mobile" class="form-input" placeholder="9876543210">
+                    <div class="error-msg" id="mobileError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="password" class="form-input">
+                    <div class="error-msg" id="passwordError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label>Confirm Password</label>
+                    <input type="password" id="confirmPassword" class="form-input">
+                    <div class="error-msg" id="confirmError"></div>
+                </div>
+                <button type="submit">Create Account</button>
+            </form>
+
+            <div id="form-message"></div>
+
+        </div>
+    </div> -->
     <script src="../js/data.js"></script>
     <script src="../js/api.js"></script>
     <script src="../js/main.js"></script>

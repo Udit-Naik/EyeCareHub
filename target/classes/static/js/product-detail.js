@@ -8,10 +8,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function loadProductDetails() {
     const params = new URLSearchParams(window.location.search);
-    const productId = parseInt(params.get('id')); // Default to 1 if testing
+    const productId = params.get('id');
 
-    // Find product
-    const product = products.find(p => p.id === productId) || products[0];
+    // Try to load from backend first
+    if (window.api && window.api.getProductById) {
+        window.api.getProductById(productId).then(p => {
+            const mapped = mapBackendProduct(p);
+            renderProductView(mapped);
+            renderRelated(mapped);
+        }).catch(() => {
+            const product = (window.products || [])[0];
+            renderProductView(product);
+            renderRelated(product);
+        });
+        return;
+    }
+
+    // Fallback to local data
+    const product = products.find(p => String(p.id) === String(productId)) || products[0];
 
     if (!product) {
         document.getElementById('product-container').innerHTML = '<h2>Product not found</h2>';
@@ -23,6 +37,24 @@ function loadProductDetails() {
 
     // Render Related (Same category, exclude current)
     renderRelated(product);
+}
+
+function mapBackendProduct(p) {
+    if (!p) return null;
+    return {
+        id: p.id || p._id || p.id,
+        name: p.name || p.title || 'Unnamed',
+        category: p.category || 'Uncategorized',
+        brand: p.brand || '',
+        gender: p.gender || '',
+        price: p.price || p.amount || 0,
+        discount: p.discount || 0,
+        rating: p.rating || 0,
+        image: p.imageUrl || p.image || '/static/placeholder.png',
+        desc: p.description || p.desc || '',
+        stock: p.stock || 0,
+        createdAt: p.createdAt || p.date
+    };
 }
 
 function renderProductView(product) {
@@ -212,27 +244,38 @@ function getStarRating(rating) {
 
 function addToCartDetail(id) {
     const qty = parseInt(document.getElementById('qtyVal').innerText);
-    const product = products.find(p => p.id === id);
+    // find product in window.products or use API
+    const product = (window.products || []).find(p => String(p.id) === String(id));
 
-    let cart = JSON.parse(localStorage.getItem('cart')) || [];
-    const existing = cart.find(item => item.id === id);
-
-    if (existing) {
-        existing.quantity += qty;
-    } else {
-        cart.push({ ...product, quantity: qty });
+    if (window.api && window.api.addToCart) {
+        window.api.addToCart({ productId: id, quantity: qty }).then(() => {
+            updateCartCount();
+            showToast(`Added ${qty} x ${product ? product.name : 'item'} to cart`);
+        }).catch(() => {
+            // fallback local
+            fallbackLocalAdd();
+        });
+        return;
     }
 
-    localStorage.setItem('cart', JSON.stringify(cart));
-    updateCartCount();
+    fallbackLocalAdd();
 
-    // Toast
-    const toast = document.getElementById('toast');
-    toast.innerText = `Added ${qty} x ${product.name} to cart`;
-    toast.classList.remove('hidden');
-    toast.style.opacity = 1;
-    setTimeout(() => {
-        toast.style.opacity = 0;
-        setTimeout(() => toast.classList.add('hidden'), 300);
-    }, 3000);
+    function fallbackLocalAdd() {
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const existing = cart.find(item => String(item.id) === String(id));
+
+        if (existing) existing.quantity += qty;
+        else cart.push({ ...(product || { id, name: 'Item', price: 0 }), quantity: qty });
+
+        localStorage.setItem('cart', JSON.stringify(cart));
+        updateCartCount();
+        const toast = document.getElementById('toast');
+        toast.innerText = `Added ${qty} x ${product ? product.name : 'item'} to cart`;
+        toast.classList.remove('hidden');
+        toast.style.opacity = 1;
+        setTimeout(() => {
+            toast.style.opacity = 0;
+            setTimeout(() => toast.classList.add('hidden'), 300);
+        }, 3000);
+    }
 }

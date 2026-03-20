@@ -36,9 +36,25 @@
     <main class="admin-main">
         <header class="admin-header">
             <h1 class="admin-title">Dashboard</h1>
+
             <div style="display: flex; gap: 20px; align-items: center;">
-                <button class="action-btn"><i class="fa-solid fa-bell"></i></button>
-                <div style="width: 40px; height: 40px; background: #333; border-radius: 50%;"></div>
+
+                <!-- Notification -->
+                <button class="action-btn">
+                    <i class="fa-solid fa-bell"></i>
+                </button>
+
+                <!-- Logout button 👇 -->
+                <button onclick="adminLogout()" class="action-btn">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                </button>
+
+                <!-- Avatar -->
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <img id="adminAvatar" style="width:40px; height:40px; border-radius:50%; display:none;">
+
+                    <span id="adminName" style="font-size:0.9rem;"></span>
+                </div>
             </div>
         </header>
 
