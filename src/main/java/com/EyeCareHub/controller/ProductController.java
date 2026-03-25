@@ -67,4 +67,11 @@ public class ProductController {
     public ResponseEntity<List<Product>> filterProductsByPrice(@RequestParam Double min, @RequestParam Double max) {
         return new ResponseEntity<>(productService.filterProductsByPrice(min, max), HttpStatus.OK);
     }
+
+    @GetMapping("/page")
+    public ResponseEntity<?> getProductsPage(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
+        return ResponseEntity.ok(productService.getProductsPage(page, size));
+    }
 }

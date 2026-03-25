@@ -10,23 +10,27 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
-@CrossOrigin(origins = "*", maxAge = 3600)
+import com.EyeCareHub.dto.OrderRequest;
+import com.EyeCareHub.dto.StatusUpdateRequest;
 @RestController
 @RequestMapping("/api/orders")
+@CrossOrigin(origins = "*", maxAge = 3600)
 public class OrderController {
 
     @Autowired
     private OrderService orderService;
 
     private String getCurrentUserId() {
-        UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserDetailsImpl userDetails =
+            (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return userDetails.getId();
     }
 
     @PostMapping
-    public ResponseEntity<Order> placeOrder(@RequestParam String paymentType) {
-        return ResponseEntity.ok(orderService.placeOrder(getCurrentUserId(), paymentType));
+    public ResponseEntity<Order> placeOrder(@RequestBody OrderRequest request) {
+        return ResponseEntity.ok(
+            orderService.placeOrder(getCurrentUserId(), request.getPaymentType())
+        );
     }
 
     @GetMapping
@@ -40,9 +44,14 @@ public class OrderController {
         return ResponseEntity.ok(orderService.getAllOrders());
     }
 
-    @PutMapping("/{id}/status")
+   @PutMapping("/{id}/status")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Order> updateOrderStatus(@PathVariable String id, @RequestParam String status) {
-        return ResponseEntity.ok(orderService.updateOrderStatus(id, status));
+    public ResponseEntity<Order> updateOrderStatus(
+            @PathVariable String id,
+            @RequestBody StatusUpdateRequest request) {
+
+        return ResponseEntity.ok(
+            orderService.updateOrderStatus(id, request.getStatus())
+        );
     }
 }

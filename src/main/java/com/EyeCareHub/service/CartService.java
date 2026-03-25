@@ -1,7 +1,7 @@
 package com.EyeCareHub.service;
 
-import com.EyeCareHub.model.Cart;
 import com.EyeCareHub.dto.CartItemDto;
+import com.EyeCareHub.model.Cart;
 
 public interface CartService {
     Cart getCartByUserId(String userId);

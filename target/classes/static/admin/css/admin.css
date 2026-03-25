@@ -180,3 +180,237 @@ body {
     background: #ff4d4d;
     color: #fff;
 }
+
+
+/* ─── MODAL BACKDROP ───────────────────────── */
+.modal-backdrop {
+    position: fixed;
+    inset: 0;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(8px);
+
+    z-index: 9999;
+
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+/* ✅ SHOW MODAL */
+.modal-backdrop.open {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* ─── MODAL BOX ───────────────────────── */
+.modal-box {
+    width: 420px;
+    max-width: 90%;
+
+    background: linear-gradient(145deg, #111, #1a1a1a);
+    border: 1px solid #2a2a2a;
+
+    border-radius: 16px;
+    padding: 28px;
+
+    box-shadow:
+        0 0 40px rgba(0, 229, 255, 0.15),
+        inset 0 0 10px rgba(255, 255, 255, 0.03);
+
+    position: relative;
+
+    transform: scale(0.9);
+    opacity: 0;
+    transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+/* ✅ OPEN ANIMATION */
+.modal-backdrop.open .modal-box {
+    transform: scale(1);
+    opacity: 1;
+}
+
+/* ─── CLOSE BUTTON ───────────────────────── */
+.modal-close {
+    position: absolute;
+    top: 12px;
+    right: 15px;
+
+    font-size: 22px;
+    color: #888;
+    cursor: pointer;
+    background: none;
+    border: none;
+}
+
+.modal-close:hover {
+    color: #fff;
+}
+
+/* ─── FORM ───────────────────────── */
+.form-group {
+    margin-bottom: 18px;
+}
+
+.form-group label {
+    color: #aaa;
+    font-size: 13px;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 11px;
+
+    background: #0f0f0f;
+    border: 1px solid #333;
+    color: #fff;
+
+    border-radius: 10px;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    border-color: #00e5ff;
+    box-shadow: 0 0 8px rgba(0, 229, 255, 0.4);
+}
+
+/* ─── BUTTON ───────────────────────── */
+.btn-primary {
+    width: 100%;
+    padding: 12px;
+
+    background: linear-gradient(135deg, #ffd54f, #ffb300);
+    color: #000;
+
+    border: none;
+    border-radius: 10px;
+
+    font-weight: 600;
+    cursor: pointer;
+
+    transition: 0.3s;
+}
+
+/* Hover */
+.btn-primary:hover {
+    background: linear-gradient(135deg, #ffe082, #ffc107);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(255, 193, 7, 0.4);
+}
+
+/* Click */
+.btn-primary:active {
+    transform: scale(0.97);
+}
+
+/* ─── CURSOR FIX ───────────────────────── */
+#user-modal input,
+#user-modal select {
+  cursor: text;
+}
+
+#user-modal button {
+  cursor: pointer;
+}
+
+/* ─── NOTIFICATION WRAPPER ───────────────── */
+.notification-wrapper {
+  position: relative;
+}
+
+/* 🔴 Badge */
+.badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: #ff3b3b;
+  color: #fff;
+  font-size: 10px;
+  padding: 3px 6px;
+  border-radius: 50%;
+  font-weight: 600;
+}
+
+/* ─── DROPDOWN ───────────────────────── */
+.notification-dropdown {
+  display: none;
+  position: absolute;
+  top: 45px;
+  right: 0;
+  width: 320px;
+  max-height: 350px;
+  overflow-y: auto;
+  background: #111;
+  color: #fff;
+  border-radius: 12px;
+  padding: 12px;
+  z-index: 9999;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+
+  /* Smooth animation */
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: all 0.25s ease;
+}
+
+/* ✅ ACTIVE STATE (IMPORTANT FIX) */
+.notification-dropdown.active {
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Title */
+.notification-dropdown h4 {
+  margin-bottom: 10px;
+  font-size: 16px;
+  border-bottom: 1px solid #333;
+  padding-bottom: 6px;
+}
+
+/* ─── ITEM ───────────────────────── */
+.notification-item {
+  padding: 10px;
+  border-bottom: 1px solid #2a2a2a;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  border-radius: 6px;
+}
+
+.notification-item:last-child {
+  border-bottom: none;
+}
+
+.notification-item:hover {
+  background: #1f1f1f;
+}
+
+/* Text styles */
+.notification-item b {
+  color: #00e5ff;
+}
+
+.notification-item small {
+  color: #aaa;
+  font-size: 12px;
+}
+
+/* ─── SCROLLBAR (Nice UI) ───────────────── */
+.notification-dropdown::-webkit-scrollbar {
+  width: 6px;
+}
+
+.notification-dropdown::-webkit-scrollbar-thumb {
+  background: #444;
+  border-radius: 10px;
+}
+
+.notification-dropdown::-webkit-scrollbar-thumb:hover {
+  background: #666;
+}

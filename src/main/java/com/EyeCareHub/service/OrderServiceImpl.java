@@ -2,7 +2,9 @@ package com.EyeCareHub.service;
 
 import com.EyeCareHub.model.Cart;
 import com.EyeCareHub.model.Order;
+import com.EyeCareHub.model.User;
 import com.EyeCareHub.repository.OrderRepository;
+import com.EyeCareHub.repository.UserRepository;
 import com.EyeCareHub.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,16 +21,28 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private CartService cartService;
 
+    // ✅ ADD THIS
+    @Autowired
+    private UserRepository userRepository;
+
     @Override
     @Transactional
     public Order placeOrder(String userId, String paymentType) {
+
         Cart cart = cartService.getCartByUserId(userId);
+
         if (cart.getItems().isEmpty()) {
             throw new RuntimeException("Cart is empty");
         }
 
+        // ✅ FETCH USER
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        // ✅ PASS USERNAME
         Order order = new Order(
                 userId,
+                user.getUsername(),
                 cart.getItems(),
                 cart.getTotalPrice(),
                 "PENDING",
@@ -37,6 +51,7 @@ public class OrderServiceImpl implements OrderService {
 
         orderRepository.save(order);
         cartService.clearCart(userId);
+
         return order;
     }
 

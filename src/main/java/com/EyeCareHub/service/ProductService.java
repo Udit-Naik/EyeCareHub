@@ -3,7 +3,7 @@ package com.EyeCareHub.service;
 import com.EyeCareHub.model.Product;
 import java.util.List;
 import java.util.Optional;
-
+import org.springframework.data.domain.Page;
 public interface ProductService {
     Product createProduct(Product product);
     List<Product> getAllProducts();
@@ -13,4 +13,5 @@ public interface ProductService {
     List<Product> getProductsByCategory(String category);
     List<Product> searchProductsByName(String name);
     List<Product> filterProductsByPrice(Double min, Double max);
+    Page<Product> getProductsPage(int page, int size);
 }

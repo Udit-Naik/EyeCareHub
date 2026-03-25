@@ -8,6 +8,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -69,4 +72,9 @@ public class ProductServiceImpl implements ProductService {
     public List<Product> filterProductsByPrice(Double min, Double max) {
         return productRepository.findByPriceBetween(min, max);
     }
+    @Override
+public Page<Product> getProductsPage(int page, int size) {
+    Pageable pageable = PageRequest.of(page, size);
+    return productRepository.findAll(pageable);
+}   
 }

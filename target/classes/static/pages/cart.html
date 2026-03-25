@@ -1,76 +1,125 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Shopping Cart - EYECAREHUB</title>
 
     <!-- Fonts & Icons -->
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
 
     <!-- Styles -->
-    <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/components.css">
-    <link rel="stylesheet" href="../css/cart.css">
-    <link rel="stylesheet" href="../css/utils.css">
-    <link rel="stylesheet" href="../css/animations.css">
-    <link rel="stylesheet" href="../css/antigravity.css">
-</head>
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="../css/components.css" />
+    <link rel="stylesheet" href="../css/cart.css" />
+    <link rel="stylesheet" href="../css/utils.css" />
+    <link rel="stylesheet" href="../css/animations.css" />
+    <link rel="stylesheet" href="../css/antigravity.css" />
+  </head>
 
-<body style="background: #0a0a0a;">
-
+  <body style="background: #0a0a0a">
     <!-- Nav -->
     <nav class="navbar">
-        <div class="container nav-container">
-            <a href="../index.html" class="logo">EYECAREHUB<span class="text-accent">.</span></a>
+      <div class="container nav-container">
+        <a href="../index.html" class="logo"
+          >EYECAREHUB<span class="text-accent">.</span></a
+        >
 
-            <ul class="nav-links desktop-only">
-                <li><a href="../index.html" class="nav-link">Home</a></li>
-                <li><a href="categories.html" class="nav-link">Shop</a></li>
-            </ul>
+        <ul class="nav-links desktop-only">
+          <li><a href="../index.html" class="nav-link">Home</a></li>
+          <li><a href="categories.html" class="nav-link">Shop</a></li>
+        </ul>
+        <div class="nav-icons">
+          <!-- Cart -->
+          <a href="cart.html" class="icon-btn active">
+            <i class="fa-solid fa-bag-shopping"></i>
+            <span class="badge" id="cart-count">0</span>
+          </a>
 
-            <div class="nav-icons">
-                <a href="cart.html" class="icon-btn active">
-                    <i class="fa-solid fa-bag-shopping"></i>
-                    <span class="badge" id="cart-count">0</span>
-                </a>
-                <a href="login.html" class="icon-btn"><i class="fa-regular fa-user"></i></a>
+          <!-- USER SECTION -->
+          <div id="userSection" style="position: relative">
+            <!-- Login Icon -->
+            <a href="login.html" id="loginLink" class="icon-btn">
+              <i class="fa-regular fa-user"></i>
+            </a>
+
+            <!-- Avatar -->
+            <img
+              id="userAvatar"
+              style="
+                width: 32px;
+                height: 32px;
+                border-radius: 50%;
+                display: none;
+                cursor: pointer;
+              "
+            />
+
+            <!-- Dropdown -->
+            <div
+              id="userDropdown"
+              style="
+                display: none;
+                position: absolute;
+                right: 0;
+                top: 40px;
+                background: #111;
+                border: 1px solid #333;
+                border-radius: 8px;
+                padding: 10px;
+                min-width: 120px;
+                z-index: 1000;
+              "
+            >
+              <div id="logoutBtn" style="cursor: pointer; padding: 8px">
+                Logout
+              </div>
             </div>
+          </div>
         </div>
+      </div>
     </nav>
 
     <header class="page-header-small">
-        <div class="container">
-            <h1>Shopping Bag</h1>
-        </div>
+      <div class="container">
+        <h1>Shopping Bag</h1>
+      </div>
     </header>
 
     <section class="container" id="cart-container">
-        <!-- Injected by JS -->
-        <div class="empty-cart">
-            <i class="fa-solid fa-cart-arrow-down"></i>
-            <h3>Your cart is empty</h3>
-            <p>Looks like you haven't added anything yet.</p>
-            <a href="categories.html" class="btn btn-primary" style="margin-top: 20px;">Start Shopping</a>
-        </div>
+      <!-- Injected by JS -->
+      <div class="empty-cart">
+        <i class="fa-solid fa-cart-arrow-down"></i>
+        <h3>Your cart is empty</h3>
+        <p>Looks like you haven't added anything yet.</p>
+        <a
+          href="categories.html"
+          class="btn btn-primary"
+          style="margin-top: 20px"
+          >Start Shopping</a
+        >
+      </div>
     </section>
 
     <!-- Footer -->
     <footer>
-        <div class="container">
-            <div style="text-align: center; color: #666; font-size: 0.9rem;">
-                <p>&copy; 2026 EYECAREHUB Inc.</p>
-            </div>
+      <div class="container">
+        <div style="text-align: center; color: #666; font-size: 0.9rem">
+          <p>&copy; 2026 EYECAREHUB Inc.</p>
         </div>
+      </div>
     </footer>
 
-    <script src="../js/data.js"></script>
     <script src="../js/api.js"></script>
     <script src="../js/main.js"></script>
     <script src="../js/cart.js"></script>
     <script src="../js/cursor.js"></script>
-</body>
-
+  </body>
 </html>

@@ -16,16 +16,19 @@ public class Order {
     @Id
     private String id;
     private String userId;
+    private String username; // ✅ added
     private List<CartItem> items;
     private Double totalPrice;
-    private String status; // PENDING, CONFIRMED, SHIPPED, DELIVERED, CANCELLED
-    private String paymentType; // COD, Card
-    
+    private String status;
+    private String paymentType;
+
     @CreatedDate
     private Date createdAt;
 
-    public Order(String userId, List<CartItem> items, Double totalPrice, String status, String paymentType) {
+    public Order(String userId, String username, List<CartItem> items,
+                 Double totalPrice, String status, String paymentType) {
         this.userId = userId;
+        this.username = username; // ✅ correct
         this.items = items;
         this.totalPrice = totalPrice;
         this.status = status;

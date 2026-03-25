@@ -12,6 +12,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 public class Cart {
+
     @Id
     private String id;
     private String userId;
@@ -22,9 +23,13 @@ public class Cart {
         this.userId = userId;
     }
 
+    // ✅ NULL SAFE (IMPORTANT)
     public void calculateTotalPrice() {
         this.totalPrice = this.items.stream()
-                .mapToDouble(item -> item.getPrice() * item.getQuantity())
+                .mapToDouble(item ->
+                        (item.getPrice() != null ? item.getPrice() : 0.0)
+                                * item.getQuantity()
+                )
                 .sum();
     }
 }

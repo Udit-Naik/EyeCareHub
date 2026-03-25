@@ -1,421 +1,686 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>EyeCareHub</title>
 
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
-        rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
 
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/components.css">
-    <link rel="stylesheet" href="css/utils.css">
-    <link rel="stylesheet" href="css/animations.css">
-    <link rel="stylesheet" href="css/antigravity.css">
-</head>
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/components.css" />
+    <link rel="stylesheet" href="css/utils.css" />
+    <link rel="stylesheet" href="css/animations.css" />
+    <link rel="stylesheet" href="css/antigravity.css" />
+  </head>
 
-<body style="background: #0a0a0a;">
-
+  <body style="background: #0a0a0a">
     <!-- Preloader -->
     <div class="preloader">
-        <div class="loader-logo">
-            <span>EyeCareHub</span>
-        </div>
-        <div class="loader-bar-bg">
-            <div class="loader-bar"></div>
-        </div>
+      <div class="loader-logo">
+        <span>EyeCareHub</span>
+      </div>
+      <div class="loader-bar-bg">
+        <div class="loader-bar"></div>
+      </div>
     </div>
 
     <div id="toast" class="toast hidden">Item added to cart</div>
 
     <!-- Floating Nav -->
     <nav class="navbar">
-        <div class="container nav-container">
-            <a href="index.html" class="logo">EyeCareHub</a>
-            <ul class="nav-links desktop-only">
-                <li><a href="pages/categories.html?category=Eyeglasses" class="nav-link">Eyeglasses</a></li>
-                <li><a href="pages/categories.html?category=Sunglasses" class="nav-link">Sunglasses</a></li>
-                <li><a href="pages/categories.html?category=Contact Lenses" class="nav-link">Contact Lenses</a></li>
-                <li><a href="pages/categories.html?category=Computer Glasses" class="nav-link">Computer Glasses</a></li>
-            </ul>
-            <div class="nav-icons">
-                <button class="icon-btn search-trigger">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                </button>
+      <div class="container nav-container">
+        <a href="index.html" class="logo">EyeCareHub</a>
+        <ul class="nav-links desktop-only">
+          <li>
+            <a href="pages/categories.html?category=Eyeglasses" class="nav-link"
+              >Eyeglasses</a
+            >
+          </li>
+          <li>
+            <a href="pages/categories.html?category=Sunglasses" class="nav-link"
+              >Sunglasses</a
+            >
+          </li>
+          <li>
+            <a
+              href="pages/categories.html?category=Contact Lenses"
+              class="nav-link"
+              >Contact Lenses</a
+            >
+          </li>
+          <li>
+            <a
+              href="pages/categories.html?category=Computer Glasses"
+              class="nav-link"
+              >Computer Glasses</a
+            >
+          </li>
+        </ul>
+        <div class="nav-icons">
+          <button class="icon-btn search-trigger">
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </button>
 
-                <a href="pages/cart.html" class="icon-btn">
-                    <i class="fa-solid fa-bag-shopping"></i>
-                    <span class="badge" id="cart-count">0</span>
-                </a>
+          <a href="pages/cart.html" class="icon-btn">
+            <i class="fa-solid fa-bag-shopping"></i>
+            <span class="badge" id="cart-count">0</span>
+          </a>
 
-                <!-- 👇 ADD THIS HERE -->
-                <div id="userSection" style="position: relative;">
+          <!-- 👇 ADD THIS HERE -->
+          <div id="userSection" style="position: relative">
+            <!-- Login icon (before login) -->
+            <a href="pages/login.html" id="loginLink" class="icon-btn">
+              <i class="fa-solid fa-user"></i>
+            </a>
 
-                    <!-- Login icon (before login) -->
-                    <a href="pages/login.html" id="loginLink" class="icon-btn">
-                        <i class="fa-solid fa-user"></i>
-                    </a>
+            <!-- Avatar (after login) -->
+            <img
+              id="userAvatar"
+              style="
+                width: 32px;
+                height: 32px;
+                border-radius: 50%;
+                display: none;
+                cursor: pointer;
+              "
+            />
 
-                    <!-- Avatar (after login) -->
-                    <img id="userAvatar"
-                        style="width:32px; height:32px; border-radius:50%; display:none; cursor:pointer;">
-
-                    <!-- 👇 Dropdown -->
-                    <div id="userDropdown" style="
-        display:none;
-        position:absolute;
-        right:0;
-        top:40px;
-        background:#111;
-        border:1px solid #333;
-        border-radius:8px;
-        padding:10px;
-        min-width:120px;
-        z-index:1000;
-    ">
-                        <div id="logoutBtn" style="cursor:pointer; padding:8px;">
-                            Logout
-                        </div>
-                    </div>
-
-                </div>
+            <!-- 👇 Dropdown -->
+            <div
+              id="userDropdown"
+              style="
+                display: none;
+                position: absolute;
+                right: 0;
+                top: 40px;
+                background: #111;
+                border: 1px solid #333;
+                border-radius: 8px;
+                padding: 10px;
+                min-width: 120px;
+                z-index: 1000;
+              "
+            >
+              <div id="logoutBtn" style="cursor: pointer; padding: 8px">
+                Logout
+              </div>
             </div>
+          </div>
         </div>
+      </div>
     </nav>
 
     <!-- Massive Hero -->
     <header class="hero">
-        <div class="gravity-field">
-            <!-- Floating items scattered -->
-            <img src="https://images.unsplash.com/photo-1572635196237-14b3f281503f?q=80&w=500" class="floating-item"
-                style="top: 15%; left: 10%; width: 200px; animation-delay: 0s;">
-            <img src="https://i.pinimg.com/1200x/0e/f8/81/0ef8816afa0ef4d59267f97d2a3de525.jpg" class="floating-item"
-                style="top: 60%; right: 15%; width: 220px; animation-delay: -2s;">
-            <img src="https://i.pinimg.com/1200x/86/9a/e9/869ae985ab62910234ea9e62dc83f0f1.jpg" class="floating-item"
-                style="top: 20%; right: 20%; width: 180px; animation-delay: -4s;">
-            <img src="https://images.unsplash.com/photo-1591076482161-42ce6da69f67?q=80&w=500" class="floating-item"
-                style="bottom: 10%; left: 25%; width: 150px; animation-delay: -1s;">
-        </div>
+      <div class="gravity-field">
+        <!-- Floating items scattered -->
+        <img
+          src="https://images.unsplash.com/photo-1572635196237-14b3f281503f?q=80&w=500"
+          class="floating-item"
+          style="top: 15%; left: 10%; width: 200px; animation-delay: 0s"
+        />
+        <img
+          src="https://i.pinimg.com/1200x/0e/f8/81/0ef8816afa0ef4d59267f97d2a3de525.jpg"
+          class="floating-item"
+          style="top: 60%; right: 15%; width: 220px; animation-delay: -2s"
+        />
+        <img
+          src="https://i.pinimg.com/1200x/86/9a/e9/869ae985ab62910234ea9e62dc83f0f1.jpg"
+          class="floating-item"
+          style="top: 20%; right: 20%; width: 180px; animation-delay: -4s"
+        />
+        <img
+          src="https://images.unsplash.com/photo-1591076482161-42ce6da69f67?q=80&w=500"
+          class="floating-item"
+          style="bottom: 10%; left: 25%; width: 150px; animation-delay: -1s"
+        />
+      </div>
 
-        <div class="container hero-content text-center">
-            <h1 class="hero-title">
-                <span class="d-block" style="color: #fff;">DEFY</span>
-                <span class="text-gradient">GRAVITY</span>
-            </h1>
-            <p class="hero-subtitle">The next evolution of eyewear. Weightless, clear, limitless.</p>
+      <div class="container hero-content text-center">
+        <h1 class="hero-title">
+          <span class="d-block" style="color: #fff">DEFY</span>
+          <span class="text-gradient">GRAVITY</span>
+        </h1>
+        <p class="hero-subtitle">
+          The next evolution of eyewear. Weightless, clear, limitless.
+        </p>
 
-            <!-- Refined CTA -->
-            <div style="margin-top: 50px; display: flex; justify-content: center; gap: 20px;">
-                <a href="pages/categories.html" class="btn-clean animate-pulse-glow">
-                    <span>Explore Frames</span>
-                    <i class="fa-solid fa-arrow-right-long" style="margin-left: 10px;"></i>
-                </a>
-            </div>
+        <!-- Refined CTA -->
+        <div
+          style="
+            margin-top: 50px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+          "
+        >
+          <a href="pages/categories.html" class="btn-clean animate-pulse-glow">
+            <span>Explore Frames</span>
+            <i
+              class="fa-solid fa-arrow-right-long"
+              style="margin-left: 10px"
+            ></i>
+          </a>
         </div>
+      </div>
     </header>
 
     <!-- Marquee -->
     <div class="marquee-container">
-        <div class="marquee-content">
-            FUTURE VISION /// EYECAREHUB SERIES /// ZERO GRAVITY /// NEXT GEN LENSES /// FLIGHT READY ///
-            FUTURE VISION /// EYECAREHUB SERIES /// ZERO GRAVITY /// NEXT GEN LENSES /// FLIGHT READY ///
-        </div>
+      <div class="marquee-content">
+        FUTURE VISION /// EYECAREHUB SERIES /// ZERO GRAVITY /// NEXT GEN LENSES
+        /// FLIGHT READY /// FUTURE VISION /// EYECAREHUB SERIES /// ZERO
+        GRAVITY /// NEXT GEN LENSES /// FLIGHT READY ///
+      </div>
     </div>
 
     <!-- Bento Grid Categories -->
     <section class="section">
-        <div class="container">
-            <h2 style="font-size: 3rem; margin-bottom: 40px; text-transform: uppercase;">The Collection</h2>
+      <div class="container">
+        <h2
+          style="
+            font-size: 3rem;
+            margin-bottom: 40px;
+            text-transform: uppercase;
+          "
+        >
+          The Collection
+        </h2>
 
-            <div class="bento-grid">
-                <!-- Large Feature -->
-                <div class="bento-item bento-large"
-                    style="background: radial-gradient(circle at top right, #2a2a2a, #0a0a0a); position: relative; overflow: hidden; border: 1px solid rgba(255,255,255,0.1);">
-                    <div style="z-index: 10; position: relative; padding: 10px;">
-                        <span
-                            style="color: var(--accent-color); font-size: 0.9rem; letter-spacing: 2px; text-transform: uppercase; font-weight: 700;">New
-                            Arrival</span>
-                        <h3 style="font-size: 3rem; margin: 10px 0 15px; line-height: 1;">Spectra<br>Series X</h3>
-                        <p
-                            style="color: #bbb; margin-bottom: 25px; max-width: 60%; font-weight: 300; font-size: 1.1rem;">
-                            Next-gen acetate frames with adaptive light control.
-                        </p>
-                        <button class="btn btn-outline"
-                            onclick="window.location.href='pages/categories.html?category=Eyeglasses'"
-                            style="border-color: rgba(255,255,255,0.3); backdrop-filter: blur(5px); padding: 12px 30px;">
-                            Shop Collection
-                        </button>
-                    </div>
-                    <img src="https://i.pinimg.com/736x/ee/9d/a5/ee9da5488092810d3df766cf07f1f142.jpg"
-                        style="position: absolute; right: -80px; bottom: -80px; width: 450px; transform: rotate(-10deg); opacity: 1; filter: drop-shadow(-20px 20px 40px rgba(0,0,0,0.5)); transition: transform 0.5s;">
-                </div>
-
-                <!-- Medium Feature -->
-                <div class="bento-item bento-medium" style="background: #e0e0e0; color: #000;">
-                    <div>
-                        <h3 style="font-size: 1.8rem; font-weight: 800;">Sun Series</h3>
-                        <p style="margin-bottom: 15px;">Polarized protection.</p>
-                        <a href="pages/categories.html?category=Sunglasses"
-                            style="color: #000; text-decoration: underline; font-weight: 700;">Shop Now</a>
-                    </div>
-                    <img src="https://i.pinimg.com/736x/b3/95/6e/b3956e130f4702510a2c842e19fec774.jpg"
-                        style="width: 100%; margin-top: 20px; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.2));">
-                </div>
-
-                <!-- Small Features -->
-                <div class="bento-item bento-small" style="background: var(--accent-color); color: #000;">
-                    <i class="fa-solid fa-glasses" style="font-size: 3rem; margin-bottom: 20px;"></i>
-                    <h3 style="font-size: 1.5rem; font-weight: 800;">Flash Sale</h3>
-                    <p>Up to 50% off select frames.</p>
-                </div>
-
-                <div class="bento-item bento-small">
-                    <h3 style="font-size: 1.5rem;">New Arrivals</h3>
-                    <div style="display: flex; gap: 10px; margin-top: 10px;">
-                        <img src="https://i.pinimg.com/736x/26/96/87/269687784c9486d94d19f19c494afb5e.jpg"
-                            style="border-radius: 8px;">
-
-                    </div>
-                </div>
-
-                <div class="bento-item bento-small" style="background: #1a1a1a;">
-                    <h3 style="font-size: 1.5rem;">Join the Vision</h3>
-                    <p style="color: #666; font-size: 0.9rem; margin-bottom: 10px;">Get exclusive drops.</p>
-                    <input type="email" placeholder="Email"
-                        style="width: 100%; padding: 10px; background: #000; border: 1px solid #333; color: #fff; border-radius: 6px;">
-                </div>
+        <div class="bento-grid">
+          <!-- Large Feature -->
+          <div
+            class="bento-item bento-large"
+            style="
+              background: radial-gradient(
+                circle at top right,
+                #2a2a2a,
+                #0a0a0a
+              );
+              position: relative;
+              overflow: hidden;
+              border: 1px solid rgba(255, 255, 255, 0.1);
+            "
+          >
+            <div style="z-index: 10; position: relative; padding: 10px">
+              <span
+                style="
+                  color: var(--accent-color);
+                  font-size: 0.9rem;
+                  letter-spacing: 2px;
+                  text-transform: uppercase;
+                  font-weight: 700;
+                "
+                >New Arrival</span
+              >
+              <h3 style="font-size: 3rem; margin: 10px 0 15px; line-height: 1">
+                Spectra<br />Series X
+              </h3>
+              <p
+                style="
+                  color: #bbb;
+                  margin-bottom: 25px;
+                  max-width: 60%;
+                  font-weight: 300;
+                  font-size: 1.1rem;
+                "
+              >
+                Next-gen acetate frames with adaptive light control.
+              </p>
+              <button
+                class="btn btn-outline"
+                onclick="
+                  window.location.href =
+                    'pages/categories.html?category=Eyeglasses'
+                "
+                style="
+                  border-color: rgba(255, 255, 255, 0.3);
+                  backdrop-filter: blur(5px);
+                  padding: 12px 30px;
+                "
+              >
+                Shop Collection
+              </button>
             </div>
+            <img
+              src="https://i.pinimg.com/736x/ee/9d/a5/ee9da5488092810d3df766cf07f1f142.jpg"
+              style="
+                position: absolute;
+                right: -80px;
+                bottom: -80px;
+                width: 450px;
+                transform: rotate(-10deg);
+                opacity: 1;
+                filter: drop-shadow(-20px 20px 40px rgba(0, 0, 0, 0.5));
+                transition: transform 0.5s;
+              "
+            />
+          </div>
+
+          <!-- Medium Feature -->
+          <div
+            class="bento-item bento-medium"
+            style="background: #e0e0e0; color: #000"
+          >
+            <div>
+              <h3 style="font-size: 1.8rem; font-weight: 800">Sun Series</h3>
+              <p style="margin-bottom: 15px">Polarized protection.</p>
+              <a
+                href="pages/categories.html?category=Sunglasses"
+                style="
+                  color: #000;
+                  text-decoration: underline;
+                  font-weight: 700;
+                "
+                >Shop Now</a
+              >
+            </div>
+            <img
+              src="https://i.pinimg.com/736x/b3/95/6e/b3956e130f4702510a2c842e19fec774.jpg"
+              style="
+                width: 100%;
+                margin-top: 20px;
+                filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.2));
+              "
+            />
+          </div>
+
+          <!-- Small Features -->
+          <div
+            class="bento-item bento-small"
+            style="background: var(--accent-color); color: #000"
+          >
+            <i
+              class="fa-solid fa-glasses"
+              style="font-size: 3rem; margin-bottom: 20px"
+            ></i>
+            <h3 style="font-size: 1.5rem; font-weight: 800">Flash Sale</h3>
+            <p>Up to 50% off select frames.</p>
+          </div>
+
+          <div class="bento-item bento-small">
+            <h3 style="font-size: 1.5rem">New Arrivals</h3>
+            <div style="display: flex; gap: 10px; margin-top: 10px">
+              <img
+                src="https://i.pinimg.com/736x/26/96/87/269687784c9486d94d19f19c494afb5e.jpg"
+                style="border-radius: 8px"
+              />
+            </div>
+          </div>
+
+          <div class="bento-item bento-small" style="background: #1a1a1a">
+            <h3 style="font-size: 1.5rem">Join the Vision</h3>
+            <p style="color: #666; font-size: 0.9rem; margin-bottom: 10px">
+              Get exclusive drops.
+            </p>
+            <input
+              type="email"
+              placeholder="Email"
+              style="
+                width: 100%;
+                padding: 10px;
+                background: #000;
+                border: 1px solid #333;
+                color: #fff;
+                border-radius: 6px;
+              "
+            />
+          </div>
         </div>
+      </div>
     </section>
 
     <!-- Tech Specs Section -->
-    <section class="section" style="background: linear-gradient(to bottom, #0a0a0a, #111);">
-        <div class="container">
-            <div class="flex" style="align-items: center; gap: 60px; flex-wrap: wrap;">
-                <div style="flex: 1; min-width: 300px;">
-                    <img src="https://i.pinimg.com/736x/29/6f/5d/296f5df6a312c76c1e7371d0e3d710f8.jpg"
-                        class="animate-float"
-                        style="width: 100%; border-radius: 32px; box-shadow: 0 40px 80px rgba(0,0,0,0.6);">
-                </div>
-                <div style="flex: 1; min-width: 300px;">
-                    <h2 style="font-size: 3rem; margin-bottom: 30px; line-height: 1;">ENGINEERED<br><span
-                            class="text-gradient">PERFECTION</span></h2>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
-                        <div>
-                            <h4 style="font-size: 1.5rem; color: #fff; margin-bottom: 10px;">Titanium</h4>
-                            <p style="color: #888;">Ultra-durable, avionics-grade hinges.</p>
-                        </div>
-                        <div>
-                            <h4 style="font-size: 1.5rem; color: #fff; margin-bottom: 10px;">Polarized</h4>
-                            <p style="color: #888;">Advanced glare elimination for clarity.</p>
-                        </div>
-                        <div>
-                            <h4 style="font-size: 1.5rem; color: #fff; margin-bottom: 10px;">Blue Light</h4>
-                            <p style="color: #888;">Digital strain protection for daily use.</p>
-                        </div>
-                        <div>
-                            <h4 style="font-size: 1.5rem; color: #fff; margin-bottom: 10px;">Acetate</h4>
-                            <p style="color: #888;">Hand-polished, bio-friendly frames.</p>
-                        </div>
-                    </div>
-                </div>
+    <section
+      class="section"
+      style="background: linear-gradient(to bottom, #0a0a0a, #111)"
+    >
+      <div class="container">
+        <div
+          class="flex"
+          style="align-items: center; gap: 60px; flex-wrap: wrap"
+        >
+          <div style="flex: 1; min-width: 300px">
+            <img
+              src="https://i.pinimg.com/736x/29/6f/5d/296f5df6a312c76c1e7371d0e3d710f8.jpg"
+              class="animate-float"
+              style="
+                width: 100%;
+                border-radius: 32px;
+                box-shadow: 0 40px 80px rgba(0, 0, 0, 0.6);
+              "
+            />
+          </div>
+          <div style="flex: 1; min-width: 300px">
+            <h2 style="font-size: 3rem; margin-bottom: 30px; line-height: 1">
+              ENGINEERED<br /><span class="text-gradient">PERFECTION</span>
+            </h2>
+            <div
+              style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px"
+            >
+              <div>
+                <h4 style="font-size: 1.5rem; color: #fff; margin-bottom: 10px">
+                  Titanium
+                </h4>
+                <p style="color: #888">Ultra-durable, avionics-grade hinges.</p>
+              </div>
+              <div>
+                <h4 style="font-size: 1.5rem; color: #fff; margin-bottom: 10px">
+                  Polarized
+                </h4>
+                <p style="color: #888">
+                  Advanced glare elimination for clarity.
+                </p>
+              </div>
+              <div>
+                <h4 style="font-size: 1.5rem; color: #fff; margin-bottom: 10px">
+                  Blue Light
+                </h4>
+                <p style="color: #888">
+                  Digital strain protection for daily use.
+                </p>
+              </div>
+              <div>
+                <h4 style="font-size: 1.5rem; color: #fff; margin-bottom: 10px">
+                  Acetate
+                </h4>
+                <p style="color: #888">Hand-polished, bio-friendly frames.</p>
+              </div>
             </div>
+          </div>
         </div>
+      </div>
     </section>
 
     <!-- Brands Ticker -->
-    <div style="background: #111; padding: 40px 0; overflow: hidden; white-space: nowrap;">
-        <div class="container flex"
-            style="justify-content: space-around; opacity: 0.4; font-size: 2rem; font-weight: 800; text-transform: uppercase;">
-            <span>Ray-Ban</span>
-            <span>Oakley</span>
-            <span>Prada</span>
-            <span>Tom Ford</span>
-            <span>Persol</span>
-            <span>Burberry</span>
-        </div>
+    <div
+      style="
+        background: #111;
+        padding: 40px 0;
+        overflow: hidden;
+        white-space: nowrap;
+      "
+    >
+      <div
+        class="container flex"
+        style="
+          justify-content: space-around;
+          opacity: 0.4;
+          font-size: 2rem;
+          font-weight: 800;
+          text-transform: uppercase;
+        "
+      >
+        <span>Ray-Ban</span>
+        <span>Oakley</span>
+        <span>Prada</span>
+        <span>Tom Ford</span>
+        <span>Persol</span>
+        <span>Burberry</span>
+      </div>
     </div>
 
     <!-- Latest News -->
     <section class="section">
-        <div class="container">
-            <div class="flex justify-between" style="margin-bottom: 40px; align-items: flex-end;">
-                <h2 style="font-size: 2.5rem;">Latest Transmissions</h2>
-                <a href="#" class="btn-link">Read All</a>
-            </div>
-
-            <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
-                <div class="bento-item" style="padding: 0; min-height: 350px;">
-                    <img src="https://i.pinimg.com/originals/1f/59/d8/1f59d8458355f57970bd4b3373918c9e.gif"
-                        style="width: 100%; height: 200px; object-fit: cover;">
-                    <div style="padding: 20px;">
-                        <span style="color: var(--accent-color); font-size: 0.8rem;">TECHNOLOGY</span>
-                        <h4 style="font-size: 1.2rem; margin: 10px 0;">The Future of Smart Glass</h4>
-                        <p style="color: #888; font-size: 0.9rem;">How AR is reshaping the way we experience
-                            reality.</p>
-                    </div>
-                </div>
-                <div class="bento-item" style="padding: 0; min-height: 350px;">
-                    <img src="https://i.pinimg.com/736x/79/25/23/792523070bb36d4575e1ca8df3115d6f.jpg"
-                        style="width: 100%; height: 200px; object-fit: cover;">
-                    <div style="padding: 20px;">
-                        <span style="color: var(--accent-color); font-size: 0.8rem;">DESIGN</span>
-                        <h4 style="font-size: 1.2rem; margin: 10px 0;">Minimalism in 2026</h4>
-                        <p style="color: #888; font-size: 0.9rem;">Why less is more when it comes to wearable tech.</p>
-                    </div>
-                </div>
-                <div class="bento-item" style="padding: 0; min-height: 350px;">
-                    <img src="https://i.pinimg.com/736x/c0/1d/97/c01d97b792b304c94f3c0d8730c2e783.jpg"
-                        style="width: 100%; height: 200px; object-fit: cover;">
-                    <div style="padding: 20px;">
-                        <span style="color: var(--accent-color); font-size: 0.8rem;">EVENTS</span>
-                        <h4 style="font-size: 1.2rem; margin: 10px 0;">EyeCareHub Launch Party</h4>
-                        <p style="color: #888; font-size: 0.9rem;">Recap of our global launch event in Tokyo.</p>
-                    </div>
-                </div>
-            </div>
+      <div class="container">
+        <div
+          class="flex justify-between"
+          style="margin-bottom: 40px; align-items: flex-end"
+        >
+          <h2 style="font-size: 2.5rem">Latest Transmissions</h2>
+          <a href="#" class="btn-link">Read All</a>
         </div>
+
+        <div
+          class="grid"
+          style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr))"
+        >
+          <div class="bento-item" style="padding: 0; min-height: 350px">
+            <img
+              src="https://i.pinimg.com/originals/1f/59/d8/1f59d8458355f57970bd4b3373918c9e.gif"
+              style="width: 100%; height: 200px; object-fit: cover"
+            />
+            <div style="padding: 20px">
+              <span style="color: var(--accent-color); font-size: 0.8rem"
+                >TECHNOLOGY</span
+              >
+              <h4 style="font-size: 1.2rem; margin: 10px 0">
+                The Future of Smart Glass
+              </h4>
+              <p style="color: #888; font-size: 0.9rem">
+                How AR is reshaping the way we experience reality.
+              </p>
+            </div>
+          </div>
+          <div class="bento-item" style="padding: 0; min-height: 350px">
+            <img
+              src="https://i.pinimg.com/736x/79/25/23/792523070bb36d4575e1ca8df3115d6f.jpg"
+              style="width: 100%; height: 200px; object-fit: cover"
+            />
+            <div style="padding: 20px">
+              <span style="color: var(--accent-color); font-size: 0.8rem"
+                >DESIGN</span
+              >
+              <h4 style="font-size: 1.2rem; margin: 10px 0">
+                Minimalism in 2026
+              </h4>
+              <p style="color: #888; font-size: 0.9rem">
+                Why less is more when it comes to wearable tech.
+              </p>
+            </div>
+          </div>
+          <div class="bento-item" style="padding: 0; min-height: 350px">
+            <img
+              src="https://i.pinimg.com/736x/c0/1d/97/c01d97b792b304c94f3c0d8730c2e783.jpg"
+              style="width: 100%; height: 200px; object-fit: cover"
+            />
+            <div style="padding: 20px">
+              <span style="color: var(--accent-color); font-size: 0.8rem"
+                >EVENTS</span
+              >
+              <h4 style="font-size: 1.2rem; margin: 10px 0">
+                EyeCareHub Launch Party
+              </h4>
+              <p style="color: #888; font-size: 0.9rem">
+                Recap of our global launch event in Tokyo.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
 
     <!-- About Us Section -->
     <section class="about-section" id="about">
-        <div class="container">
-            <div class="flex" style="align-items: center; gap: 60px; flex-wrap: wrap;">
-                <div style="flex: 1; min-width: 300px;">
-                    <h2 style="font-size: 3rem; margin-bottom: 20px;">WHO WE ARE</h2>
-                    <p style="font-size: 1.1rem; color: #888; line-height: 1.6; margin-bottom: 30px;">
-                        EyeCareHub isn't just a store; it's a curated experience for the future. We believe that
-                        eyewear
-                        should be as beautiful as it is functional.
-                        Born from a passion for optical clarity and avant-garde design, we scour the globe for
-                        frames that defy expectations.
-                    </p>
-                    <a href="#" class="btn-clean">Our Story <i class="fa-solid fa-arrow-right"
-                            style="margin-left: 10px;"></i></a>
-                </div>
-                <div style="flex: 1; min-width: 300px;">
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                        <img src="https://i.pinimg.com/1200x/9b/99/32/9b99321546308aedcec9d2ef8a53ca3d.jpg"
-                            style="border-radius: 20px; width: 100%;">
-                        <img src="https://i.pinimg.com/1200x/27/8d/42/278d4246861d8f0d382dab3a6940b5f0.jpg"
-                            style="border-radius: 20px; width: 100%; margin-top: 40px;">
-                    </div>
-                </div>
+      <div class="container">
+        <div
+          class="flex"
+          style="align-items: center; gap: 60px; flex-wrap: wrap"
+        >
+          <div style="flex: 1; min-width: 300px">
+            <h2 style="font-size: 3rem; margin-bottom: 20px">WHO WE ARE</h2>
+            <p
+              style="
+                font-size: 1.1rem;
+                color: #888;
+                line-height: 1.6;
+                margin-bottom: 30px;
+              "
+            >
+              EyeCareHub isn't just a store; it's a curated experience for the
+              future. We believe that eyewear should be as beautiful as it is
+              functional. Born from a passion for optical clarity and
+              avant-garde design, we scour the globe for frames that defy
+              expectations.
+            </p>
+            <a href="#" class="btn-clean"
+              >Our Story
+              <i class="fa-solid fa-arrow-right" style="margin-left: 10px"></i
+            ></a>
+          </div>
+          <div style="flex: 1; min-width: 300px">
+            <div
+              style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px"
+            >
+              <img
+                src="https://i.pinimg.com/1200x/9b/99/32/9b99321546308aedcec9d2ef8a53ca3d.jpg"
+                style="border-radius: 20px; width: 100%"
+              />
+              <img
+                src="https://i.pinimg.com/1200x/27/8d/42/278d4246861d8f0d382dab3a6940b5f0.jpg"
+                style="border-radius: 20px; width: 100%; margin-top: 40px"
+              />
             </div>
+          </div>
         </div>
+      </div>
     </section>
 
     <!-- Contact Us Section -->
     <section class="contact-section" id="contact">
-        <div class="container">
-            <h2 style="text-align: center; font-size: 3rem; margin-bottom: 10px;">GET IN TOUCH</h2>
-            <p style="text-align: center; color: #666;">We are here to assist you 24/7.</p>
+      <div class="container">
+        <h2 style="text-align: center; font-size: 3rem; margin-bottom: 10px">
+          GET IN TOUCH
+        </h2>
+        <p style="text-align: center; color: #666">
+          We are here to assist you 24/7.
+        </p>
 
-            <div class="contact-grid">
-                <div class="contact-card">
-                    <div class="contact-icon"><i class="fa-solid fa-location-dot"></i></div>
-                    <h3>Headquarters</h3>
-                    <p>123 Innovation Blvd,<br>Tech City, TC 90210</p>
-                </div>
-                <div class="contact-card">
-                    <div class="contact-icon"><i class="fa-solid fa-envelope"></i></div>
-                    <h3>Email Us</h3>
-                    <p>support@EyeCareHub.inc<br>sales@EyeCareHub.inc</p>
-                </div>
-                <div class="contact-card">
-                    <div class="contact-icon"><i class="fa-solid fa-phone"></i></div>
-                    <h3>Call Us</h3>
-                    <p>+1 (555) 123-4567<br>Mon-Fri, 9am-6pm</p>
-                </div>
+        <div class="contact-grid">
+          <div class="contact-card">
+            <div class="contact-icon">
+              <i class="fa-solid fa-location-dot"></i>
             </div>
+            <h3>Headquarters</h3>
+            <p>123 Innovation Blvd,<br />Tech City, TC 90210</p>
+          </div>
+          <div class="contact-card">
+            <div class="contact-icon"><i class="fa-solid fa-envelope"></i></div>
+            <h3>Email Us</h3>
+            <p>support@EyeCareHub.inc<br />sales@EyeCareHub.inc</p>
+          </div>
+          <div class="contact-card">
+            <div class="contact-icon"><i class="fa-solid fa-phone"></i></div>
+            <h3>Call Us</h3>
+            <p>+1 (555) 123-4567<br />Mon-Fri, 9am-6pm</p>
+          </div>
         </div>
+      </div>
     </section>
 
     <!-- Footer -->
     <footer
-        style="margin-top: 0; padding: 60px 0; border-top: 1px solid #222; text-align: center; background: #050505;">
-        <div class="container">
-            <span
-                style="font-size: 5rem; font-weight: 800; color: #1a1a1a; display: block; line-height: 1;">EyeCareHub</span>
-            <div
-                style="margin-top: 20px; display: flex; justify-content: center; gap: 30px; font-size: 0.9rem; color: #666;">
-                <a href="#" style="color: inherit;">Instagram</a>
-                <a href="#" style="color: inherit;">Twitter</a>
-                <a href="#" style="color: inherit;">Manifesto</a>
-            </div>
-            <p style="margin-top: 40px; font-size: 0.8rem; color: #444;">&copy; 2026 EyeCareHub</p>
+      style="
+        margin-top: 0;
+        padding: 60px 0;
+        border-top: 1px solid #222;
+        text-align: center;
+        background: #050505;
+      "
+    >
+      <div class="container">
+        <span
+          style="
+            font-size: 5rem;
+            font-weight: 800;
+            color: #1a1a1a;
+            display: block;
+            line-height: 1;
+          "
+          >EyeCareHub</span
+        >
+        <div
+          style="
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            font-size: 0.9rem;
+            color: #666;
+          "
+        >
+          <a href="#" style="color: inherit">Instagram</a>
+          <a href="#" style="color: inherit">Twitter</a>
+          <a href="#" style="color: inherit">Manifesto</a>
         </div>
+        <p style="margin-top: 40px; font-size: 0.8rem; color: #444">
+          &copy; 2026 EyeCareHub
+        </p>
+      </div>
     </footer>
 
     <!-- Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-    <script src="js/data.js"></script>
     <script src="js/api.js"></script>
     <script src="js/main.js"></script>
     <script src="js/cursor.js"></script>
 
     <script>
-        // Preloader Logic
-        window.addEventListener('load', () => {
-            const preloader = document.querySelector('.preloader');
-            const hasSeenPreloader = sessionStorage.getItem('hasSeenPreloader');
+      // Preloader Logic
+      window.addEventListener("load", () => {
+        const preloader = document.querySelector(".preloader");
+        const hasSeenPreloader = sessionStorage.getItem("hasSeenPreloader");
 
-            if (hasSeenPreloader) {
-                // If already seen, hide immediately (no animation)
-                preloader.style.display = 'none';
-                initHeroAnimations();
-            } else {
-                // If first time, run animation
-                setTimeout(() => {
-                    preloader.classList.add('fade-out');
-                    sessionStorage.setItem('hasSeenPreloader', 'true');
-                    // Trigger Hero Animations after generic load
-                    setTimeout(() => {
-                        initHeroAnimations();
-                        setTimeout(() => preloader.style.display = 'none', 1000); // cleanup
-                    }, 500);
-                }, 2500);
-            }
-        });
-
-        // Hero Animations
-        function initHeroAnimations() {
-            gsap.registerPlugin(ScrollTrigger);
-
-            gsap.from('.hero-title span', {
-                y: 100,
-                opacity: 0,
-                duration: 1.5,
-                stagger: 0.2,
-                ease: "power4.out"
-            });
-
-            gsap.from('.floating-item', {
-                y: 200,
-                opacity: 0,
-                duration: 2,
-                stagger: 0.1,
-                ease: "elastic.out(1, 0.7)"
-            });
+        if (hasSeenPreloader) {
+          // If already seen, hide immediately (no animation)
+          preloader.style.display = "none";
+          initHeroAnimations();
+        } else {
+          // If first time, run animation
+          setTimeout(() => {
+            preloader.classList.add("fade-out");
+            sessionStorage.setItem("hasSeenPreloader", "true");
+            // Trigger Hero Animations after generic load
+            setTimeout(() => {
+              initHeroAnimations();
+              setTimeout(() => (preloader.style.display = "none"), 1000); // cleanup
+            }, 500);
+          }, 2500);
         }
+      });
 
-        // Parallax for floating items
-        document.addEventListener('mousemove', (e) => {
-            const x = (e.clientX / window.innerWidth - 0.5) * 20;
-            const y = (e.clientY / window.innerHeight - 0.5) * 20;
+      // Hero Animations
+      function initHeroAnimations() {
+        gsap.registerPlugin(ScrollTrigger);
 
-            gsap.to('.floating-item', {
-                x: (i) => x * (i + 1) * 0.5,
-                y: (i) => y * (i + 1) * 0.5,
-                duration: 1,
-                ease: "power2.out"
-            });
+        gsap.from(".hero-title span", {
+          y: 100,
+          opacity: 0,
+          duration: 1.5,
+          stagger: 0.2,
+          ease: "power4.out",
         });
-    </script>
-</body>
 
+        gsap.from(".floating-item", {
+          y: 200,
+          opacity: 0,
+          duration: 2,
+          stagger: 0.1,
+          ease: "elastic.out(1, 0.7)",
+        });
+      }
+
+      // Parallax for floating items
+      document.addEventListener("mousemove", (e) => {
+        const x = (e.clientX / window.innerWidth - 0.5) * 20;
+        const y = (e.clientY / window.innerHeight - 0.5) * 20;
+
+        gsap.to(".floating-item", {
+          x: (i) => x * (i + 1) * 0.5,
+          y: (i) => y * (i + 1) * 0.5,
+          duration: 1,
+          ease: "power2.out",
+        });
+      });
+    </script>
+  </body>
 </html>

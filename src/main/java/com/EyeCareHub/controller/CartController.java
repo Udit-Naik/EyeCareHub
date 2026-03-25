@@ -18,7 +18,8 @@ public class CartController {
     private CartService cartService;
 
     private String getCurrentUserId() {
-        UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserDetailsImpl userDetails =
+                (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return userDetails.getId();
     }
 
@@ -38,7 +39,8 @@ public class CartController {
     }
 
     @PutMapping("/update/{productId}")
-    public ResponseEntity<Cart> updateQuantity(@PathVariable String productId, @RequestParam Integer quantity) {
+    public ResponseEntity<Cart> updateQuantity(@PathVariable String productId,
+                                               @RequestParam Integer quantity) {
         return ResponseEntity.ok(cartService.updateQuantity(getCurrentUserId(), productId, quantity));
     }
 }
